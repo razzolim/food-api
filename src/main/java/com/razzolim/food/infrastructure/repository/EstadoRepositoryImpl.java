@@ -5,13 +5,14 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.stereotype.Component;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.razzolim.food.domain.model.Estado;
 import com.razzolim.food.domain.repository.EstadoRepository;
 
-@Component
+@Repository
 public class EstadoRepositoryImpl implements EstadoRepository {
 
 	@PersistenceContext
@@ -33,9 +34,15 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 		return manager.merge(estado);
 	}
 
+	@Transactional
 	@Override
-	public void remover(Estado estado) {
-		estado = buscar(estado.getId());
-		manager.remove(estado);
+	public void remover(Long id) {
+        Estado estado = buscar(id);
+        
+        if (estado == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+        
+        manager.remove(estado);
 	}
 }
