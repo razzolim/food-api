@@ -1,14 +1,38 @@
 package com.razzolim.food.domain.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.razzolim.food.domain.model.Restaurante;
 
-public interface RestauranteRepository {
+@Repository
+public interface RestauranteRepository
+		extends CustomJpaRepository<Restaurante, Long>, RestauranteRepositoryQueries,
+			JpaSpecificationExecutor<Restaurante> {
 
-	Restaurante salvar(Restaurante restaurante);
-    List<Restaurante> listar();
-    Restaurante buscar(Long id);
-    void remover(Long id);
+	List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
+
+	/**
+	 * 3 formas: 1. findByNome 2. @Query()... 3. META-INF/orm.xml
+	 * 
+	 * @param nome
+	 * @param cozinhaId
+	 * @return
+	 */
+//	@Query("from Restaurante where nome like %:nome% and cozinha.id = :id")
+	List<Restaurante> consultarPorNome(String nome, @Param("id") Long cozinhaId);
+
+//	List<Restaurante> findByNomeContainingAndCozinhaId(String nome, Long cozinhaId);
+
+	Optional<Restaurante> findFirstRestauranteByNome(String nome);
+
+	List<Restaurante> findTop2ByNomeContaining(String nome);
+
+	int countByCozinhaId(Long cozinhaId);
 
 }

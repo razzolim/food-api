@@ -1,11 +1,19 @@
 package com.razzolim.food.domain.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import com.razzolim.food.domain.model.Cozinha;
 
 @Repository
-public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
+public interface CozinhaRepository extends CustomJpaRepository<Cozinha, Long> {
+	
+	List<Cozinha> findTodasByNomeContaining(String nome);
+	
+	Optional<Cozinha> findByNome(String nome);
+	
+	boolean existsByNome(String nome);
 	
 }
