@@ -19,7 +19,7 @@ public interface RestauranteRepository
 	/**
 	 * sem o join fetch em formasPagamento a query nao resolveria o N+1
 	 */
-	@Query("from Restaurante as r join fetch r.cozinha join fetch r.formasPagamento")
+	@Query("from Restaurante as r join fetch r.cozinha")
 	List<Restaurante> findAll();
 
 	List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
