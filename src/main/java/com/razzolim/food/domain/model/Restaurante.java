@@ -44,7 +44,7 @@ public class Restaurante {
 	/**
 	 * @ManyToOne muitos restaurantes possuem uma cozinha
 	 */
-	@JsonIgnore
+//	@JsonIgnore
 //	@JsonIgnoreProperties("hibernateLazyInitializer") /* ignora propriedades que estão dentro da instancia de cozinha */
 	@ManyToOne //(fetch = FetchType.LAZY) /* todas as anotações q terminam com ToOne utilizam default a estratégia eager loading */
 	@JoinColumn(name = "cozinha_id", nullable = false)
