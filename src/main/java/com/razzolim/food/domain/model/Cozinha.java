@@ -10,10 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.razzolim.food.Groups.CadastroRestaurante;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,12 +27,13 @@ import lombok.EqualsAndHashCode;
 @Table(name = "Cozinha")
 public class Cozinha {
 
-    @NotNull
+    @NotNull(groups = CadastroRestaurante.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(name = "nome", length = 255)
     private String nome;
 
