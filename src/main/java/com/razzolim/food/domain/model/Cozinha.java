@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -24,16 +25,17 @@ import lombok.EqualsAndHashCode;
 @Table(name = "Cozinha")
 public class Cozinha {
 
-	@EqualsAndHashCode.Include
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @NotNull
+    @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(name = "nome", length = 255)
-	private String nome;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "cozinha")
-	private List<Restaurante> restaurantes = new ArrayList<>();
+    @Column(name = "nome", length = 255)
+    private String nome;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "cozinha")
+    private List<Restaurante> restaurantes = new ArrayList<>();
 
 }
