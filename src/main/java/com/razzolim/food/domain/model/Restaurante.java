@@ -20,12 +20,14 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.razzolim.food.Groups.CadastroRestaurante;
+import com.razzolim.food.Groups;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -46,11 +48,11 @@ public class Restaurante {
 	 */
 //	@NotNull
 //	@NotEmpty
-	@NotBlank(groups = CadastroRestaurante.class)
+	@NotBlank
 	@Column(nullable = false)
 	private String nome;
 
-	@PositiveOrZero(groups = CadastroRestaurante.class)
+	@PositiveOrZero
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
@@ -60,7 +62,8 @@ public class Restaurante {
 //	@JsonIgnore
 //	@JsonIgnoreProperties("hibernateLazyInitializer") /* ignora propriedades que estão dentro da instancia de cozinha */
 	@Valid
-	@NotNull(groups = CadastroRestaurante.class) // por padrão o bean validation não valida por cascata... cozinha.id resolve com @Valid
+	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+	@NotNull // por padrão o bean validation não valida por cascata... cozinha.id resolve com @Valid
 	@ManyToOne //(fetch = FetchType.LAZY) /* todas as anotações q terminam com ToOne utilizam default a estratégia eager loading */
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;

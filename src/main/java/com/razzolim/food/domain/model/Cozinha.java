@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.razzolim.food.Groups.CadastroRestaurante;
+import com.razzolim.food.Groups.CozinhaId;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +27,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "Cozinha")
 public class Cozinha {
 
-    @NotNull(groups = CadastroRestaurante.class)
+    @NotNull(groups = CozinhaId.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
