@@ -48,6 +48,7 @@ public class Restaurante {
 	 */
 //	@NotNull
 //	@NotEmpty
+//	@NotBlank(message = "Nome é obrigatório.") repetitivo e burocrático
 	@NotBlank
 	@Column(nullable = false)
 	private String nome;
