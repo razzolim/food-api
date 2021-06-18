@@ -38,11 +38,11 @@ public class Problem {
     /* details/extensão/complemento */
     private String userMessage;
     private LocalDateTime timestamp;
-    private List<Field> fields;
+    private List<Object> objects;
     
     @Getter
     @Builder
-    public static class Field {
+    public static class Object {
 	
 	private String name;
 	private String userMessage;
