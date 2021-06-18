@@ -27,7 +27,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.razzolim.food.core.validation.Groups;
-import com.razzolim.food.core.validation.Multiplo;
 import com.razzolim.food.core.validation.ValorZeroIncluiDescricao;
 
 import lombok.Data;
@@ -56,10 +55,10 @@ public class Restaurante {
 	@Column(nullable = false)
 	private String nome;
 
-	@NotNull
 //	@PositiveOrZero(message = "{TaxaFrete.invalida}")
 //	@TaxaFrete
-	@Multiplo(numero = 5)
+//	@Multiplo(numero = 5)
+	@NotNull
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
