@@ -35,6 +35,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.razzolim.food.core.validation.ValidacaoException;
 import com.razzolim.food.domain.exception.EntidadeEmUsoException;
 import com.razzolim.food.domain.exception.EntidadeNaoEncontradaException;
 import com.razzolim.food.domain.exception.NegocioException;
@@ -47,8 +48,10 @@ import com.razzolim.food.domain.exception.NegocioException;
  */
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
-    /** ResponseEntityExceptionHandler Herda tratamento de exceções comuns do spring. */
-    
+    /**
+     * ResponseEntityExceptionHandler Herda tratamento de exceções comuns do spring.
+     */
+
     private static final String MSG_ERRO_GENERICA_USUARIO_FINAL = "Ocorreu um erro interno inesperado no sistema. "
 	    + "Tente novamente e se o problema persistir, entre em contato com o administrador do sistema.";
 
@@ -73,37 +76,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	return super.handleExceptionInternal(ex, body, headers, status, request);
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-            HttpHeaders headers, HttpStatus status, WebRequest request) {
+    @ExceptionHandler({ ValidacaoException.class })
+    public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex,
+	    WebRequest request) {
+	return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(),
+		HttpStatus.BAD_REQUEST, request);
+    }
 
-        ProblemType problemType = ProblemType.DADOS_INVALIDOS;
-        String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
-        
-        BindingResult bindingResult = ex.getBindingResult();
-        	
-        
-        List<Problem.Object> problemObjects = bindingResult.getAllErrors().stream()
-        	.map(objectError -> {
-        	    String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
-        	    
-        	    String name = objectError.getObjectName();
-        	    if (objectError instanceof FieldError) {
-        		name = ((FieldError) objectError).getField();
-        	    }
-        	    
-        	    return Problem.Object.builder()
-        		.name(name)
-        		.userMessage(message)
-        		.build();
-        	    }).collect(Collectors.toList());
-        
-        Problem problem = createProblemBuilder(status, problemType, detail)
-            .userMessage(detail)
-            .objects(problemObjects)
-            .build();
-        
-        return handleExceptionInternal(ex, problem, headers, status, request);
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+	    MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status,
+	    WebRequest request) {
+	return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
     }
 
     @Override
@@ -171,22 +155,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
-    private ResponseEntity<Object> handleInvalidFormat(InvalidFormatException ex,
-	    HttpHeaders headers, HttpStatus status, WebRequest request) {
-
-	String path = joinPath(ex.getPath());
-
-	ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
-	String detail = String.format("A propriedade '%s' recebeu o valor '%s', "
-		+ "que é de um tipo inválido. Corrija e informe um valor compatível com o tipo %s.",
-		path, ex.getValue(), ex.getTargetType().getSimpleName());
-
-	Problem problem = createProblemBuilder(status, problemType, detail)
-		.userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL).build();
-
-	return handleExceptionInternal(ex, problem, headers, status, request);
-    }
-
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
     public ResponseEntity<?> handleEntidadeNaoEncontrada(EntidadeNaoEncontradaException ex,
 	    WebRequest request) {
@@ -246,6 +214,49 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		.build();
 
 	return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+    private ResponseEntity<Object> handleValidationInternal(Exception ex,
+	    BindingResult bindingResult, HttpHeaders headers, HttpStatus status,
+	    WebRequest request) {
+
+	ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+	String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
+
+	List<Problem.Object> problemObjects = bindingResult.getAllErrors().stream()
+		.map(objectError -> {
+		    String message = messageSource.getMessage(objectError,
+			    LocaleContextHolder.getLocale());
+
+		    String name = objectError.getObjectName();
+
+		    if (objectError instanceof FieldError) {
+			name = ((FieldError) objectError).getField();
+		    }
+
+		    return Problem.Object.builder().name(name).userMessage(message).build();
+		}).collect(Collectors.toList());
+
+	Problem problem = createProblemBuilder(status, problemType, detail).userMessage(detail)
+		.objects(problemObjects).build();
+
+	return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleInvalidFormat(InvalidFormatException ex,
+	    HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+	String path = joinPath(ex.getPath());
+
+	ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+	String detail = String.format("A propriedade '%s' recebeu o valor '%s', "
+		+ "que é de um tipo inválido. Corrija e informe um valor compatível com o tipo %s.",
+		path, ex.getValue(), ex.getTargetType().getSimpleName());
+
+	Problem problem = createProblemBuilder(status, problemType, detail)
+		.userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL).build();
+
+	return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
     private ResponseEntity<Object> handlePropertyBinding(PropertyBindingException ex,
