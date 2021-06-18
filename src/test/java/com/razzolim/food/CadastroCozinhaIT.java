@@ -1,6 +1,7 @@
 package com.razzolim.food;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -47,7 +48,6 @@ public class CadastroCozinhaIT {
     
     @Test
     public void deveRetornarStatus200_QuandoConsultarCozinhas() {
-	
 	given()
 		.accept(ContentType.JSON)
 	.when()
@@ -57,18 +57,14 @@ public class CadastroCozinhaIT {
     }
     
     @Test
-    public void deveConter4Cozinhas_QuandoConsultarCozinhas() {
-	RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-	
+    public void deveConter2Cozinhas_QuandoConsultarCozinhas() {
 	given()
-		.port(port)
-		.basePath("/cozinhas")
 		.accept(ContentType.JSON)
 	.when()
 		.get()
 	.then()
-		.body("", hasSize(4))
-		.body("nome", hasItems("Indiana", "Tailandesa"));
+		.body("", hasSize(2))
+		.body("nome", hasItems("Americana", "Tailandesa"));
     }
     
     @Test
@@ -83,13 +79,36 @@ public class CadastroCozinhaIT {
 		.statusCode(HttpStatus.CREATED.value());
     }
     
+    @Test
+    public void deveRetornarRespostaEStatusCorretos_QuandoConsultarCozinhaExistente() {
+	given()
+		.pathParam("cozinhaId", 2)
+		.accept(ContentType.JSON)
+	.when()
+		.get("/{cozinhaId}")
+	.then()
+		.statusCode(HttpStatus.OK.value())
+		.body("nome", equalTo("Americana"));
+    }
+    
+    @Test
+    public void deveRetornarStatus404_QuandoConsultarCozinhaInexistente() {
+	given()
+		.pathParam("cozinhaId", 100)
+		.accept(ContentType.JSON)
+	.when()
+		.get("/{cozinhaId}")
+	.then()
+		.statusCode(HttpStatus.NOT_FOUND.value());
+    }
+    
     private void prepararDados() {
 	Cozinha cozinha1 = new Cozinha();
 	cozinha1.setNome("Tailandesa");
 	cozinhaRepository.save(cozinha1);
 	
 	Cozinha cozinha2 = new Cozinha();
-	cozinha1.setNome("Americana");
+	cozinha2.setNome("Americana");
 	cozinhaRepository.save(cozinha2);
     }
 
