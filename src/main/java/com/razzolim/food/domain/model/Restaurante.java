@@ -25,8 +25,6 @@ import javax.validation.groups.Default;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.razzolim.food.core.validation.Groups;
 import com.razzolim.food.core.validation.ValorZeroIncluiDescricao;
 
@@ -68,7 +66,7 @@ public class Restaurante {
 	 */
 //	@JsonIgnore
 //	@JsonIgnoreProperties("hibernateLazyInitializer") /* ignora propriedades que estão dentro da instancia de cozinha */
-	@JsonIgnoreProperties(value = "nome", allowGetters = true) // allowGetters -> não vai ignorar na hora de serializar o json
+//	@JsonIgnoreProperties(value = "nome", allowGetters = true) // allowGetters -> não vai ignorar na hora de serializar o json
 	@Valid // por padrão o bean validation não valida por cascata... cozinha.id resolve com @Valid
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@NotNull 
@@ -80,21 +78,17 @@ public class Restaurante {
 	 * @Embedeed essa propriedade se torna de um tipo incorporável, complementando
 	 *           anotação na classe do endereço
 	 */
-	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 
-	@JsonIgnore
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataCadastro;
 
-	@JsonIgnore
 	@UpdateTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataAtualizacao;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante") /* todas as anotações q terminam com ToMany utilizam default a estratégia lazy loading */
 	private List<Produto> produtos = new ArrayList<>();  
 	
@@ -106,7 +100,6 @@ public class Restaurante {
 	 * @InverseJoinColumns define o nome da coluna na tabela composta do atributo da
 	 *                     classe que se relaciona com essa
 	 */
-	@JsonIgnore
 	@ManyToMany//(fetch = FetchType.EAGER) /* todas as anotações q terminam com ToMany utilizam default a estratégia lazy loading */
 	@JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
