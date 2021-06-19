@@ -1,7 +1,7 @@
 package com.razzolim.food.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,6 @@ import javax.validation.groups.Default;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.razzolim.food.core.validation.Groups;
 import com.razzolim.food.core.validation.ValorZeroIncluiDescricao;
 
@@ -51,14 +50,14 @@ public class Restaurante {
 //	@NotNull
 //	@NotEmpty
 //	@NotBlank(message = "Nome é obrigatório.") repetitivo e burocrático
-	@NotBlank
+//	@NotBlank
 	@Column(nullable = false)
 	private String nome;
 
 //	@PositiveOrZero(message = "{TaxaFrete.invalida}")
 //	@TaxaFrete
 //	@Multiplo(numero = 5)
-	@NotNull
+//	@NotNull
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
@@ -67,9 +66,10 @@ public class Restaurante {
 	 */
 //	@JsonIgnore
 //	@JsonIgnoreProperties("hibernateLazyInitializer") /* ignora propriedades que estão dentro da instancia de cozinha */
-	@Valid // por padrão o bean validation não valida por cascata... cozinha.id resolve com @Valid
-	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
-	@NotNull 
+//	@JsonIgnoreProperties(value = "nome", allowGetters = true) // allowGetters -> não vai ignorar na hora de serializar o json
+//	@Valid // por padrão o bean validation não valida por cascata... cozinha.id resolve com @Valid
+//	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+//	@NotNull // como está usando DTO, as validações podem sair daqui pois já estão lá
 	@ManyToOne //(fetch = FetchType.LAZY) /* todas as anotações q terminam com ToOne utilizam default a estratégia eager loading */
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
@@ -78,21 +78,17 @@ public class Restaurante {
 	 * @Embedeed essa propriedade se torna de um tipo incorporável, complementando
 	 *           anotação na classe do endereço
 	 */
-	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 
-	@JsonIgnore
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 
-	@JsonIgnore
 	@UpdateTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
-	private LocalDateTime dataAtualizacao;
+	private OffsetDateTime dataAtualizacao;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante") /* todas as anotações q terminam com ToMany utilizam default a estratégia lazy loading */
 	private List<Produto> produtos = new ArrayList<>();  
 	
@@ -104,7 +100,6 @@ public class Restaurante {
 	 * @InverseJoinColumns define o nome da coluna na tabela composta do atributo da
 	 *                     classe que se relaciona com essa
 	 */
-	@JsonIgnore
 	@ManyToMany//(fetch = FetchType.EAGER) /* todas as anotações q terminam com ToMany utilizam default a estratégia lazy loading */
 	@JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
