@@ -7,20 +7,23 @@
  * language in any way or for any other purposes whatsoever without the prior
  * written consent of Renan Azzolim.
  */
-package com.razzolim.food.api.model.mixin;
+package com.razzolim.food.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.razzolim.food.domain.model.Estado;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Renan Azzolim
  *
- * @since
+ * @since 
  * 
  */
-public abstract class CidadeMixin {
+@Setter
+@Getter
+public class CidadeModel {
 
-    @JsonIgnoreProperties(value = "nome", allowGetters = true)
-    private Estado estado;
-
+    private Long id;
+    private String nome;
+    private EstadoModel estado;
+    
 }

@@ -7,13 +7,12 @@
  * language in any way or for any other purposes whatsoever without the prior
  * written consent of Renan Azzolim.
  */
-package com.razzolim.food.api.model.mixin;
+package com.razzolim.food.api.model.input;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.razzolim.food.domain.model.Restaurante;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Renan Azzolim
@@ -21,9 +20,11 @@ import com.razzolim.food.domain.model.Restaurante;
  * @since
  * 
  */
-public abstract class CozinhaMixin {
+@Setter
+@Getter
+public class CozinhaInput {
 
-    @JsonIgnore
-    private List<Restaurante> restaurantes = new ArrayList<>();
+    @NotBlank
+    private String nome;
 
 }
