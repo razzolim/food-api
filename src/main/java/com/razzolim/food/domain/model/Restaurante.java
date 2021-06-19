@@ -50,14 +50,14 @@ public class Restaurante {
 //	@NotNull
 //	@NotEmpty
 //	@NotBlank(message = "Nome é obrigatório.") repetitivo e burocrático
-	@NotBlank
+//	@NotBlank
 	@Column(nullable = false)
 	private String nome;
 
 //	@PositiveOrZero(message = "{TaxaFrete.invalida}")
 //	@TaxaFrete
 //	@Multiplo(numero = 5)
-	@NotNull
+//	@NotNull
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
@@ -67,9 +67,9 @@ public class Restaurante {
 //	@JsonIgnore
 //	@JsonIgnoreProperties("hibernateLazyInitializer") /* ignora propriedades que estão dentro da instancia de cozinha */
 //	@JsonIgnoreProperties(value = "nome", allowGetters = true) // allowGetters -> não vai ignorar na hora de serializar o json
-	@Valid // por padrão o bean validation não valida por cascata... cozinha.id resolve com @Valid
-	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
-	@NotNull 
+//	@Valid // por padrão o bean validation não valida por cascata... cozinha.id resolve com @Valid
+//	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+//	@NotNull // como está usando DTO, as validações podem sair daqui pois já estão lá
 	@ManyToOne //(fetch = FetchType.LAZY) /* todas as anotações q terminam com ToOne utilizam default a estratégia eager loading */
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
