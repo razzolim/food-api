@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.razzolim.food.api.assembler.RestauranteInputDisassembler;
 import com.razzolim.food.api.assembler.RestauranteModelAssembler;
 import com.razzolim.food.api.model.RestauranteModel;
 import com.razzolim.food.api.model.input.RestauranteInput;
 import com.razzolim.food.domain.exception.CozinhaNaoEncontradaException;
 import com.razzolim.food.domain.exception.NegocioException;
-import com.razzolim.food.domain.model.Cozinha;
 import com.razzolim.food.domain.model.Restaurante;
 import com.razzolim.food.domain.repository.RestauranteRepository;
 import com.razzolim.food.domain.service.CadastroRestauranteService;
@@ -43,6 +43,9 @@ public class RestauranteController {
     
     @Autowired
     private RestauranteModelAssembler restauranteModelAssembler;
+    
+    @Autowired
+    private RestauranteInputDisassembler restauranteInputDisassembler; 
 
     @GetMapping
     public List<RestauranteModel> listar() {
@@ -59,7 +62,7 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.CREATED)
     public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
 	try {
-	    Restaurante restaurante = toDomainObject(restauranteInput);
+	    Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 	    return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restaurante));
 	} catch (CozinhaNaoEncontradaException error) {
 	    throw new NegocioException(error.getMessage());
@@ -72,7 +75,7 @@ public class RestauranteController {
 
 	Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 	
-	Restaurante restaurante = toDomainObject(restauranteInput);
+	Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 	BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco",
 		"dataCadastro", "produtos");
 
@@ -81,19 +84,6 @@ public class RestauranteController {
 	} catch (CozinhaNaoEncontradaException error) {
 	    throw new NegocioException(error.getMessage());
 	}
-    }
-    
-    private Restaurante toDomainObject(RestauranteInput restauranteInput) {
-	Restaurante restaurante = new Restaurante();
-	restaurante.setNome(restauranteInput.getNome());
-	restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
-	
-	Cozinha cozinha = new Cozinha();
-	cozinha.setId(restauranteInput.getCozinha().getId());
-	
-	restaurante.setCozinha(cozinha);
-	
-	return restaurante;
     }
 
     /*
