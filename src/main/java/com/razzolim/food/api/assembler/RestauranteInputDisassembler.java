@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.razzolim.food.api.model.input.RestauranteInput;
+import com.razzolim.food.domain.model.Cidade;
 import com.razzolim.food.domain.model.Cozinha;
 import com.razzolim.food.domain.model.Restaurante;
 
@@ -37,6 +38,11 @@ public class RestauranteInputDisassembler {
 	// evitar problema JPA entender que está alterando o ID da cozinha
 	// qnd na vdd está alterando a cozinha do restaurante
 	restaurante.setCozinha(new Cozinha());
+	
+	if (restaurante.getEndereco() != null) {
+	    restaurante.getEndereco().setCidade(new Cidade());
+	}
+	
 	modelMapper.map(restauranteInput, restaurante);
     }
     

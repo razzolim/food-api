@@ -20,6 +20,7 @@ import com.razzolim.food.api.assembler.RestauranteInputDisassembler;
 import com.razzolim.food.api.assembler.RestauranteModelAssembler;
 import com.razzolim.food.api.model.RestauranteModel;
 import com.razzolim.food.api.model.input.RestauranteInput;
+import com.razzolim.food.domain.exception.CidadeNaoEncontradaException;
 import com.razzolim.food.domain.exception.CozinhaNaoEncontradaException;
 import com.razzolim.food.domain.exception.NegocioException;
 import com.razzolim.food.domain.model.Restaurante;
@@ -64,7 +65,7 @@ public class RestauranteController {
 	try {
 	    Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 	    return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restaurante));
-	} catch (CozinhaNaoEncontradaException error) {
+	} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException error) {
 	    throw new NegocioException(error.getMessage());
 	}
     }
@@ -84,7 +85,7 @@ public class RestauranteController {
 	
 	try {
 	    return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restauranteAtual));
-	} catch (CozinhaNaoEncontradaException error) {
+	} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException error) {
 	    throw new NegocioException(error.getMessage());
 	}
     }
