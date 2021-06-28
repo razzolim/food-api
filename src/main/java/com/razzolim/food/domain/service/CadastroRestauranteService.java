@@ -1,9 +1,8 @@
 package com.razzolim.food.domain.service;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.razzolim.food.domain.exception.RestauranteNaoEncontradoException;
 import com.razzolim.food.domain.model.Cozinha;
@@ -28,6 +27,18 @@ public class CadastroRestauranteService {
 	restaurante.setCozinha(cozinha);
 
 	return restauranteRepository.save(restaurante);
+    }
+    
+    @Transactional
+    public void ativar(Long restauranteId) {
+	Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
+	restauranteAtual.ativar();
+    }
+    
+    @Transactional
+    public void inativar(Long restauranteId) {
+	Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
+	restauranteAtual.inativar();
     }
 
     public Restaurante buscarOuFalhar(Long restauranteId) {
