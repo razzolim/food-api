@@ -13,6 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.razzolim.food.api.model.EnderecoModel;
+import com.razzolim.food.domain.model.Endereco;
+
 /**
  * @author Renan Azzolim
  *
@@ -29,6 +32,12 @@ public class ModelMapperConfig {
 	// utilizado para customizar o mapeamento das propriedades
 //	modelMapper.createTypeMap(Restaurante.class, RestauranteModel.class)
 //		.addMapping(Restaurante::getTaxaFrete, RestauranteModel::setPrecoFrete);
+	
+	// config para exibir nome do estado no campo CidadeResumoModel.estado e não o .toString()
+	var enderecoToEnderecoModelTypeMap = modelMapper.createTypeMap(Endereco.class, EnderecoModel.class);
+	enderecoToEnderecoModelTypeMap.<String>addMapping(
+		enderecoSrc -> enderecoSrc.getCidade().getEstado().getNome(),
+		(enderecoModelDest, value) -> enderecoModelDest.getCidade().setEstado(value));
 	
 	return modelMapper;
     }

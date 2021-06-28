@@ -9,26 +9,21 @@
  */
 package com.razzolim.food.api.model;
 
-import java.math.BigDecimal;
-
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * @author Renan Azzolim
  *
- * @since
+ * @since 
  * 
  */
-@Getter
 @Setter
-public class RestauranteModel {
+@Getter
+public class CidadeResumoModel {
 
     private Long id;
     private String nome;
-    private BigDecimal taxaFrete;
-    private CozinhaModel cozinha;
-    private Boolean ativo;
-    private EnderecoModel endereco;
+    private String estado;
     
 }

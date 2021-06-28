@@ -9,8 +9,6 @@
  */
 package com.razzolim.food.api.model;
 
-import java.math.BigDecimal;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,15 +18,20 @@ import lombok.Setter;
  * @since
  * 
  */
-@Getter
 @Setter
-public class RestauranteModel {
+@Getter
+public class EnderecoModel {
 
-    private Long id;
-    private String nome;
-    private BigDecimal taxaFrete;
-    private CozinhaModel cozinha;
-    private Boolean ativo;
-    private EnderecoModel endereco;
-    
+    private String cep;
+
+    private String logradouro;
+
+    private String numero;
+
+    private String complemento;
+
+    private String bairro;
+
+    private CidadeResumoModel cidade;
+
 }
