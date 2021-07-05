@@ -9,6 +9,7 @@
  */
 package com.razzolim.food.api.assembler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class FormaPagamentoModelAssembler {
         return modelMapper.map(formaPagamento, FormaPagamentoModel.class);
     }
     
-    public List<FormaPagamentoModel> toCollectionModel(List<FormaPagamento> formasPagamentos) {
+    public List<FormaPagamentoModel> toCollectionModel(Collection<FormaPagamento> formasPagamentos) {
         return formasPagamentos.stream()
                 .map(formaPagamento -> toModel(formaPagamento))
                 .collect(Collectors.toList());

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.razzolim.food.domain.exception.RestauranteNaoEncontradoException;
 import com.razzolim.food.domain.model.Cidade;
 import com.razzolim.food.domain.model.Cozinha;
+import com.razzolim.food.domain.model.FormaPagamento;
 import com.razzolim.food.domain.model.Restaurante;
 import com.razzolim.food.domain.repository.RestauranteRepository;
 
@@ -21,6 +22,9 @@ public class CadastroRestauranteService {
     
     @Autowired
     private CadastroCidadeService cadastroCidade;
+    
+    @Autowired
+    private CadastroFormaPagamentoService pagamentoService;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
@@ -46,6 +50,22 @@ public class CadastroRestauranteService {
     public void inativar(Long restauranteId) {
 	Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
 	restauranteAtual.inativar();
+    }
+    
+    @Transactional
+    public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+	Restaurante restaurante = buscarOuFalhar(restauranteId);
+	FormaPagamento formaPagamento = pagamentoService.buscarOuFalhar(formaPagamentoId);
+	
+	restaurante.removerFormaPagamento(formaPagamento);
+    }
+    
+    @Transactional
+    public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+	Restaurante restaurante = buscarOuFalhar(restauranteId);
+	FormaPagamento formaPagamento = pagamentoService.buscarOuFalhar(formaPagamentoId);
+	
+	restaurante.adicionarFormaPagamento(formaPagamento);
     }
 
     public Restaurante buscarOuFalhar(Long restauranteId) {
