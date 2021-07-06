@@ -78,6 +78,7 @@ public class Restaurante {
 	private Endereco endereco;
 	
 	private Boolean ativo = Boolean.TRUE;
+	private Boolean aberto = Boolean.FALSE;
 
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
@@ -101,6 +102,14 @@ public class Restaurante {
 	@ManyToMany//(fetch = FetchType.EAGER) /* todas as anotações q terminam com ToMany utilizam default a estratégia lazy loading */
 	@JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private Set<FormaPagamento> formasPagamento = new HashSet<>();
+
+	public void abrir() {
+	    setAberto(true);
+	}
+
+	public void fechar() {
+	    setAberto(false);
+	}
 	
 	public void ativar() {
 	    setAtivo(true);
