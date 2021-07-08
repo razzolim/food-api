@@ -5,6 +5,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.razzolim.food.domain.exception.CidadeNaoEncontradaException;
@@ -33,6 +35,10 @@ public class CadastroCidadeService {
 	cidade.setEstado(estado);
 
 	return cidadeRepository.save(cidade);
+    }
+    
+    public Page<Cidade> listPageable(Pageable pageable) {
+	return cidadeRepository.findAll(pageable);
     }
 
     @Transactional
