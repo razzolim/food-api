@@ -9,6 +9,7 @@
  */
 package com.razzolim.food.api.assembler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,7 @@ import com.razzolim.food.domain.model.Usuario;
 /**
  * @author Renan Azzolim
  *
- * @since 
+ * @since
  * 
  */
 @Component
@@ -30,14 +31,12 @@ public class UsuarioModelAssembler {
 
     @Autowired
     private ModelMapper modelMapper;
-    
+
     public UsuarioModel toModel(Usuario usuario) {
-        return modelMapper.map(usuario, UsuarioModel.class);
+	return modelMapper.map(usuario, UsuarioModel.class);
     }
-    
-    public List<UsuarioModel> toCollectionModel(List<Usuario> usuarios) {
-        return usuarios.stream()
-                .map(usuario -> toModel(usuario))
-                .collect(Collectors.toList());
-    }            
-}  
+
+    public List<UsuarioModel> toCollectionModel(Collection<Usuario> usuarios) {
+	return usuarios.stream().map(usuario -> toModel(usuario)).collect(Collectors.toList());
+    }
+}

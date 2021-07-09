@@ -102,6 +102,12 @@ public class Restaurante {
 	@ManyToMany//(fetch = FetchType.EAGER) /* todas as anotações q terminam com ToMany utilizam default a estratégia lazy loading */
 	@JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private Set<FormaPagamento> formasPagamento = new HashSet<>();
+	
+	@ManyToMany
+	@JoinTable(name = "restaurante_usuario_responsavel",
+	        joinColumns = @JoinColumn(name = "restaurante_id"),
+	        inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+	private Set<Usuario> responsaveis = new HashSet<>();    
 
 	public void abrir() {
 	    setAberto(true);
@@ -110,21 +116,29 @@ public class Restaurante {
 	public void fechar() {
 	    setAberto(false);
 	}
-	
+
 	public void ativar() {
 	    setAtivo(true);
 	}
-	
+
 	public void inativar() {
 	    setAtivo(false);
 	}
-	
+
 	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
 	    return getFormasPagamento().remove(formaPagamento);
 	}
-	
+
 	public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
 	    return getFormasPagamento().add(formaPagamento);
 	}
 
-}
+	public boolean removerResponsavel(Usuario usuario) {
+	    return getResponsaveis().remove(usuario);
+	}
+
+	public boolean adicionarResponsavel(Usuario usuario) {
+	    return getResponsaveis().add(usuario);
+	}
+
+    }
