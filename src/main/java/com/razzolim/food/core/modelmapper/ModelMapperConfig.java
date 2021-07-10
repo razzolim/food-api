@@ -14,7 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.razzolim.food.api.model.EnderecoModel;
+import com.razzolim.food.api.model.input.ItemPedidoInput;
 import com.razzolim.food.domain.model.Endereco;
+import com.razzolim.food.domain.model.ItemPedido;
 
 /**
  * @author Renan Azzolim
@@ -38,6 +40,9 @@ public class ModelMapperConfig {
 	enderecoToEnderecoModelTypeMap.<String>addMapping(
 		enderecoSrc -> enderecoSrc.getCidade().getEstado().getNome(),
 		(enderecoModelDest, value) -> enderecoModelDest.getCidade().setEstado(value));
+	
+	modelMapper.createTypeMap(ItemPedidoInput.class, ItemPedido.class)
+	    .addMappings(mapper -> mapper.skip(ItemPedido::setId));  
 	
 	return modelMapper;
     }
