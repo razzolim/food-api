@@ -9,6 +9,9 @@
  */
 package com.razzolim.food.domain.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Renan Azzolim
  *
@@ -18,17 +21,23 @@ package com.razzolim.food.domain.model;
 public enum StatusPedido {
 
     CRIADO("Criado"),
-    CONFIRMADO("Confirmado"),
-    ENTREGUE("Entregue"),
-    CANCELADO("Confirmado");
+    CONFIRMADO("Confirmado", CRIADO),
+    ENTREGUE("Entregue", CONFIRMADO),
+    CANCELADO("Confirmado", CRIADO);
     
     private String descricao;
+    private List<StatusPedido> statusAnteriores;
     
-    StatusPedido(String descricao) {
+    StatusPedido(String descricao, StatusPedido... statusAnteriores) {
 	this.descricao = descricao;
+	this.statusAnteriores = Arrays.asList(statusAnteriores);
     }
     
     public String getDescricao() {
 	return this.descricao;
+    }
+    
+    public boolean naoPodeAlterarPara(StatusPedido novoStatus) {
+	return !novoStatus.statusAnteriores.contains(this);
     }
 }
