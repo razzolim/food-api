@@ -7,30 +7,20 @@
  * language in any way or for any other purposes whatsoever without the prior
  * written consent of Renan Azzolim.
  */
-package com.razzolim.food.api.model;
-
-import lombok.Setter;
-
-import com.fasterxml.jackson.annotation.JsonView;
-import com.razzolim.food.api.model.view.RestauranteView;
-
-import lombok.Getter;
+package com.razzolim.food.api.model.view;
 
 /**
  * @author Renan Azzolim
  *
- * @since
+ * @since 
  * 
  */
-@Getter
-@Setter
-public class CozinhaModel {
-
+public interface RestauranteView {
     
-    @JsonView(RestauranteView.Resumo.class)
-    private Long id;
-
-    @JsonView(RestauranteView.Resumo.class)
-    private String nome;
-
+    public interface Resumo {
+    }
+    
+    public interface ApenasNome {
+    }
+    
 }
