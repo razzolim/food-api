@@ -53,7 +53,7 @@ public class RestauranteController {
     private RestauranteInputDisassembler restauranteInputDisassembler;
 
     @JsonView(RestauranteView.Resumo.class)
-    @GetMapping(params = "projecao=resumo")
+    @GetMapping
     public List<RestauranteModel> listar() {
 	return restauranteModelAssembler.toCollectionModel(restauranteRepository.findAll());
     }

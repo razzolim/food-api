@@ -12,6 +12,8 @@ package com.razzolim.food.api.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +23,7 @@ import lombok.Setter;
  * @since
  * 
  */
+/*@JsonFilter("pedidoFilter")*/
 @Setter
 @Getter
 public class PedidoResumoModel {
