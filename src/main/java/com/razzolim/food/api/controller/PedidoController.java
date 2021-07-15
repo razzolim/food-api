@@ -39,7 +39,9 @@ import com.razzolim.food.domain.exception.NegocioException;
 import com.razzolim.food.domain.model.Pedido;
 import com.razzolim.food.domain.model.Usuario;
 import com.razzolim.food.domain.repository.PedidoRepository;
+import com.razzolim.food.domain.repository.filter.PedidoFilter;
 import com.razzolim.food.domain.service.EmissaoPedidoService;
+import com.razzolim.food.infrastructure.repository.spec.PedidoSpecs;
 
 /**
  * @author Renan Azzolim
@@ -86,8 +88,8 @@ public class PedidoController {
     }*/
 
     @GetMapping
-    public List<PedidoResumoModel> listar() {
-	List<Pedido> todosPedidos = pedidoRepository.findAll();
+    public List<PedidoResumoModel> pesquisar(PedidoFilter filtro) {
+	List<Pedido> todosPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
 	return pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
     }
 
