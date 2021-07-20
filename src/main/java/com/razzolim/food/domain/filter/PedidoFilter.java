@@ -7,7 +7,7 @@
  * language in any way or for any other purposes whatsoever without the prior
  * written consent of Renan Azzolim.
  */
-package com.razzolim.food.domain.repository.filter;
+package com.razzolim.food.domain.filter;
 
 import java.time.OffsetDateTime;
 

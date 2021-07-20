@@ -36,10 +36,10 @@ import com.razzolim.food.api.model.input.PedidoInput;
 import com.razzolim.food.core.data.PageableTranslator;
 import com.razzolim.food.domain.exception.EntidadeNaoEncontradaException;
 import com.razzolim.food.domain.exception.NegocioException;
+import com.razzolim.food.domain.filter.PedidoFilter;
 import com.razzolim.food.domain.model.Pedido;
 import com.razzolim.food.domain.model.Usuario;
 import com.razzolim.food.domain.repository.PedidoRepository;
-import com.razzolim.food.domain.repository.filter.PedidoFilter;
 import com.razzolim.food.domain.service.EmissaoPedidoService;
 import com.razzolim.food.infrastructure.repository.spec.PedidoSpecs;
 
