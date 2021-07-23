@@ -1,11 +1,10 @@
 package com.razzolim.food.domain.service;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.razzolim.food.domain.exception.CozinhaNaoEncontradaException;
 import com.razzolim.food.domain.exception.EntidadeEmUsoException;
@@ -22,24 +21,24 @@ public class CadastroCozinhaService {
 
     @Transactional
     public Cozinha salvar(Cozinha cozinha) {
-	return cozinhaRepository.save(cozinha);
+        return cozinhaRepository.save(cozinha);
     }
 
     @Transactional
     public void excluir(Long id) {
-	try {
-	    cozinhaRepository.deleteById(id);
-	    
-	    cozinhaRepository.flush();
-	    
-	} catch (EmptyResultDataAccessException error) {
-	    throw new CozinhaNaoEncontradaException(id);
-	} catch (DataIntegrityViolationException error) {
-	    throw new EntidadeEmUsoException(String.format(MSG_COZINHA_EM_USO, id));
-	}
+        try {
+            cozinhaRepository.deleteById(id);
+
+            cozinhaRepository.flush();
+
+        } catch (EmptyResultDataAccessException error) {
+            throw new CozinhaNaoEncontradaException(id);
+        } catch (DataIntegrityViolationException error) {
+            throw new EntidadeEmUsoException(String.format(MSG_COZINHA_EM_USO, id));
+        }
     }
 
     public Cozinha buscarOuFalhar(Long id) {
-	return cozinhaRepository.findById(id).orElseThrow(() -> new CozinhaNaoEncontradaException(id));
+        return cozinhaRepository.findById(id).orElseThrow(() -> new CozinhaNaoEncontradaException(id));
     }
 }
