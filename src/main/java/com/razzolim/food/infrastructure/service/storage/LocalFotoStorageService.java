@@ -29,7 +29,7 @@ import com.razzolim.food.domain.service.FotoStorageService;
 public class LocalFotoStorageService implements FotoStorageService {
 
     @Value("${food.storage.local.diretorio-fotos}")
-    private Path diretorioFotos;
+    private String diretorioFotos;
 
     @Override
     public void armazenar(NovaFoto novaFoto) {
@@ -45,7 +45,8 @@ public class LocalFotoStorageService implements FotoStorageService {
     }
 
     private Path getArquivoPath(String nomeArquivo) {
-        return diretorioFotos.resolve(Path.of(nomeArquivo));
+        Path path = Path.of(diretorioFotos);
+        return path.resolve(Path.of(nomeArquivo));
     }
 
 }
