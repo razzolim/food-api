@@ -9,6 +9,7 @@
  */
 package com.razzolim.food.domain.service;
 
+import java.io.InputStream;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.razzolim.food.domain.model.FotoProduto;
 import com.razzolim.food.domain.repository.ProdutoRepository;
+import com.razzolim.food.domain.service.FotoStorageService.NovaFoto;
 
 /**
  * @author Renan Azzolim
@@ -29,20 +31,33 @@ public class CatalogoFotoProdutoService {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+    
+    @Autowired
+    private FotoStorageService fotoStorageService;
 
     @Transactional
-    public FotoProduto salvar(FotoProduto foto) {
+    public FotoProduto salvar(FotoProduto foto, InputStream dadosArquivo) {
         Long restauranteId = foto.getRestauranteId();
         Long produtoId = foto.getProduto().getId();
+        String nomeNovoArquivo = fotoStorageService.gerarNomeArquivo(foto.getNomeArquivo());
         
         Optional<FotoProduto> fotoExistente = produtoRepository.findFotoById(restauranteId, produtoId);
         
         if (fotoExistente.isPresent()) {
             produtoRepository.delete(fotoExistente.get());
         }
+        
+        foto.setNomeArquivo(nomeNovoArquivo);
+        foto = produtoRepository.save(foto);
+        produtoRepository.flush(); // descarrega fila jpa
+        
+        NovaFoto novaFoto = NovaFoto.builder()
+                .nomeArquivo(foto.getNomeArquivo())
+                .inputStream(dadosArquivo).build();
+        
+        fotoStorageService.armazenar(novaFoto);
 
-        return produtoRepository.save(foto);
-
+        return foto;
     }
 
 }
