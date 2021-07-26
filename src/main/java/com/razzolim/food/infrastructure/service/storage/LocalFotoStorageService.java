@@ -14,10 +14,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
+import com.razzolim.food.core.storage.StorageProperties;
 import com.razzolim.food.domain.service.FotoStorageService;
 
 /**
@@ -29,8 +30,8 @@ import com.razzolim.food.domain.service.FotoStorageService;
 @Service
 public class LocalFotoStorageService implements FotoStorageService {
 
-    @Value("${food.storage.local.diretorio-fotos}")
-    private String diretorioFotos;
+    @Autowired
+    private StorageProperties storageProperties;
 
     @Override
     public void armazenar(NovaFoto novaFoto) {
@@ -68,7 +69,7 @@ public class LocalFotoStorageService implements FotoStorageService {
     } 
 
     private Path getArquivoPath(String nomeArquivo) {
-        Path path = Path.of(diretorioFotos);
+        Path path = Path.of(storageProperties.getLocal().getDiretorioFotos());
         return path.resolve(Path.of(nomeArquivo));
     }
 
