@@ -27,7 +27,7 @@ import com.razzolim.food.domain.service.FotoStorageService;
  * @since
  * 
  */
-@Service
+//@Service
 public class LocalFotoStorageService implements FotoStorageService {
 
     @Autowired
