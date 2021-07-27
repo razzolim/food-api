@@ -17,6 +17,10 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.razzolim.food.core.storage.StorageProperties.TipoStorage;
+import com.razzolim.food.domain.service.FotoStorageService;
+import com.razzolim.food.infrastructure.service.storage.LocalFotoStorageService;
+import com.razzolim.food.infrastructure.service.storage.S3FotoStorageService;
 
 /**
  * @author Renan Azzolim
@@ -25,7 +29,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
  * 
  */
 @Configuration
-public class AmazonS3Config {
+public class StorageConfig {
 
     @Autowired
     private StorageProperties storageProperties;
@@ -40,6 +44,15 @@ public class AmazonS3Config {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(storageProperties.getS3().getRegiao())
                 .build();
+    }
+    
+    @Bean
+    public FotoStorageService fotoStorageService() {
+        if (TipoStorage.S3.equals(storageProperties.getTipo())) {
+            return new S3FotoStorageService();
+        } else {
+            return new LocalFotoStorageService(); 
+        }
     }
 
 }

@@ -9,8 +9,6 @@
  */
 package com.razzolim.food.core.storage;
 
-import java.nio.file.Path;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +29,13 @@ import lombok.Setter;
 @ConfigurationProperties("food.storage")
 public class StorageProperties {
     
+    private TipoStorage tipo = TipoStorage.LOCAL;
     private Local local = new Local();
     private S3 s3 = new S3();
+    
+    public enum TipoStorage {
+        LOCAL, S3;
+    }
     
     @Getter
     @Setter
