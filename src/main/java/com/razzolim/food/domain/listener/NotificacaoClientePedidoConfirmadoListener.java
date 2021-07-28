@@ -12,6 +12,8 @@ package com.razzolim.food.domain.listener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.razzolim.food.domain.event.PedidoConfirmadoEvent;
 import com.razzolim.food.domain.model.Pedido;
@@ -32,7 +34,11 @@ public class NotificacaoClientePedidoConfirmadoListener {
     @Autowired
     private EnvioEmailService envioEmailService;
     
-    @EventListener
+//    @EventListener com essa anotação tem o problema de disparar o email antes de atualizar a bd
+    
+    /* nesta anotação, by default, o evento é executado dps que a trx é comitada. O problema disso é se
+     * acontecer alguma exception dps do commit e antes do envio. O email nao será enviado... */
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT) //
     public void aoConfirmarPedido(PedidoConfirmadoEvent event) {
         
         Pedido pedido = event.getPedido();
