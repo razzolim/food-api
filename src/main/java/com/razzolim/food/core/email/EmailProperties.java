@@ -21,7 +21,7 @@ import lombok.Setter;
 /**
  * @author Renan Azzolim
  *
- * @since 
+ * @since
  * 
  */
 @Validated // anotado pq precisa pra @NotNull
@@ -31,7 +31,13 @@ import lombok.Setter;
 @ConfigurationProperties("food.email")
 public class EmailProperties {
     
+    private Implementacao impl = Implementacao.FAKE;
+
     @NotNull
     private String remetente;
+
+    public enum Implementacao {
+        SMTP, FAKE
+    }
 
 }
