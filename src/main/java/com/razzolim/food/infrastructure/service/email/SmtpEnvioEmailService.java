@@ -15,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import com.razzolim.food.core.email.EmailProperties;
 import com.razzolim.food.domain.service.EnvioEmailService;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 /**
  * @author Renan Azzolim
@@ -33,10 +37,15 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
     
     @Autowired
     private EmailProperties emailProperties;
+    
+    @Autowired
+    private Configuration freemarkerConfig;
 
     @Override
     public void enviar(Mensagem mensagem) {
         try {
+            String corpo = processarTemplate(mensagem);
+            
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -44,11 +53,23 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
             helper.setTo(mensagem.getDestinatarios().toArray(new String[0]));
             helper.setFrom(emailProperties.getRemetente());
             helper.setSubject(mensagem.getAssunto());
-            helper.setText(mensagem.getCorpo(), true);
+            helper.setText(corpo, true);
             
             mailSender.send(mimeMessage);
         } catch (Exception error) {
             throw new EmailException("Não foi possível enviar e-mail.", error);
+        }
+    }
+    
+    private String processarTemplate(Mensagem mensagem) {
+        try {
+            Template template = freemarkerConfig.getTemplate(mensagem.getCorpo());
+            
+            return FreeMarkerTemplateUtils
+                    .processTemplateIntoString(template, mensagem.getVariaveis());
+            
+        } catch (Exception error) {
+            throw new EmailException("Não foi possível montar template do e-mail", error);
         }
     }
 
