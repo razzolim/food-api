@@ -25,6 +25,9 @@ import freemarker.template.Template;
 
 /**
  * @author Renan Azzolim
+ * 
+ * @see <a href="https://ajuda.locaweb.com.br/wiki/boas-praticas-de-html-para-email-marketing-ajuda-locaweb/">
+ * boas-praticas-de-html-para-email-marketing-ajuda-locaweb</>
  *
  * @since 
  * 

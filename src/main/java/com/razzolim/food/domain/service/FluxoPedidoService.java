@@ -25,6 +25,8 @@ import com.razzolim.food.domain.service.EnvioEmailService.Mensagem;
 @Service
 public class FluxoPedidoService {
     
+    private static final String TEMPLATE_PEDIDO_CONFIRMADO_HTML = "pedido-confirmado.html";
+
     @Autowired
     private EmissaoPedidoService emissaoPedido;
     
@@ -38,7 +40,7 @@ public class FluxoPedidoService {
 	
 	var mensagem = Mensagem.builder()
 	        .assunto(pedido.getRestaurante().getNome() + " - Pedido confirmado")
-	        .corpo("pedido-confirmado.html")
+	        .corpo(TEMPLATE_PEDIDO_CONFIRMADO_HTML)
 	        .variavel("pedido", pedido)
 	        .destinatario(pedido.getCliente().getEmail())
 	        .build();
