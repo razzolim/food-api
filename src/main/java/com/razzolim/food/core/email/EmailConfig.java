@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.razzolim.food.domain.service.EnvioEmailService;
 import com.razzolim.food.infrastructure.service.email.FakeEnvioEmailService;
+import com.razzolim.food.infrastructure.service.email.SandboxEnvioEmailService;
 import com.razzolim.food.infrastructure.service.email.SmtpEnvioEmailService;
 
 /**
@@ -31,12 +32,14 @@ public class EmailConfig {
 
     @Bean
     public EnvioEmailService envioEmailService() {
-        // Acho melhor usar switch aqui do que if/else if
+        
         switch (emailProperties.getImpl()) {
             case FAKE:
                 return new FakeEnvioEmailService();
             case SMTP:
                 return new SmtpEnvioEmailService();
+            case SANDBOX:
+                return new SandboxEnvioEmailService();
             default:
                 return null;
         }
