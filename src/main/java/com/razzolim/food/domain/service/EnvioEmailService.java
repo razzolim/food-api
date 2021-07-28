@@ -13,6 +13,8 @@ import java.util.Set;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.Singular;
 
 /**
  * @author Renan Azzolim
@@ -28,8 +30,13 @@ public interface EnvioEmailService {
     @Builder
     class Mensagem {
         
+        @Singular
         private Set<String> destinatarios;
+        
+        @NonNull
         private String assunto;
+        
+        @NonNull
         private String corpo;
         
     }
