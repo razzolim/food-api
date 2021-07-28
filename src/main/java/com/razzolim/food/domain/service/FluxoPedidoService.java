@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.razzolim.food.domain.model.Pedido;
-import com.razzolim.food.domain.service.EnvioEmailService.Mensagem;
+import com.razzolim.food.domain.repository.PedidoRepository;
 
 /**
  * @author Renan Azzolim
@@ -24,28 +24,26 @@ import com.razzolim.food.domain.service.EnvioEmailService.Mensagem;
  */
 @Service
 public class FluxoPedidoService {
-    
-    private static final String TEMPLATE_PEDIDO_CONFIRMADO_HTML = "pedido-confirmado.html";
 
     @Autowired
     private EmissaoPedidoService emissaoPedido;
     
     @Autowired
-    private EnvioEmailService envioEmailService;
+    private PedidoRepository pedidoRepository;
     
     @Transactional
     public void confirmar(String codigoPedido) {
 	Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
 	pedido.confirmar();
 	
-	var mensagem = Mensagem.builder()
-	        .assunto(pedido.getRestaurante().getNome() + " - Pedido confirmado")
-	        .corpo(TEMPLATE_PEDIDO_CONFIRMADO_HTML)
-	        .variavel("pedido", pedido)
-	        .destinatario(pedido.getCliente().getEmail())
-	        .build();
+	/* nessa implementacao do spring data em que adiciona evento e dps publica precisa chamar 
+	 * o save do repository e esse repository precisa ser do spring data, senão não funciona.*/
+	pedidoRepository.save(pedido);
 	
-	envioEmailService.enviar(mensagem);
+	/* dessa forma, quando save for chamado, é feito o flush (descarregar pro bd) e, nesse momento,
+	 * os eventos que estão registrados na "fila" serão disparados. O(s) componente que estiverem
+	 * escutando esse evento entrarão em ação...
+	 */
     }
     
     @Transactional

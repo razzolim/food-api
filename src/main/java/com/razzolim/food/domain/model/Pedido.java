@@ -30,7 +30,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
+import com.razzolim.food.domain.event.PedidoConfirmadoEvent;
 import com.razzolim.food.domain.exception.NegocioException;
 
 import lombok.Data;
@@ -43,9 +45,9 @@ import lombok.EqualsAndHashCode;
  * 
  */
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido>{
 
     @EqualsAndHashCode.Include
     @Id
@@ -95,9 +97,16 @@ public class Pedido {
 	this.valorTotal = this.subtotal.add(this.taxaFrete);
     }
     
+    /**
+     * Registrar eventos apenas a partir do agregate root.
+     * Agregados (Item, ItemPedido) não devem lançar/registrar eventos.
+     */
     public void confirmar() {
 	setStatus(StatusPedido.CONFIRMADO);
 	setDataConfirmacao(OffsetDateTime.now());
+	
+	// registra evento
+	registerEvent(new PedidoConfirmadoEvent(this));
     }
     
     public void entregar() {
