@@ -38,6 +38,8 @@ import com.razzolim.food.domain.service.CadastroFormaPagamentoService;
 
 /**
  * @author Renan Azzolim
+ * 
+ * @see software para análise de tráfego de rede: https://www.wireshark.org/
  *
  * @since 
  * 
@@ -67,6 +69,10 @@ public class FormaPagamentoController {
         
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                //.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+                //.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+                //.cacheControl(CacheControl.noCache()) se for cacheado, havera validacao. como se sempre estivesse stale
+                //.cacheControl(CacheControl.noStore()) ninguem pode armazenar em nenhum tipo de cache (nao existe cache)
                 .body(formasPagamentoModel);
     }
     
