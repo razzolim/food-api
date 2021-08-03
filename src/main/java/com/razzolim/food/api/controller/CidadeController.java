@@ -31,6 +31,9 @@ import com.razzolim.food.domain.model.Cidade;
 import com.razzolim.food.domain.repository.CidadeRepository;
 import com.razzolim.food.domain.service.CadastroCidadeService;
 
+import io.swagger.annotations.Api;
+
+@Api(tags = "Cidades")
 @RestController
 @RequestMapping("/cidades")
 public class CidadeController {
