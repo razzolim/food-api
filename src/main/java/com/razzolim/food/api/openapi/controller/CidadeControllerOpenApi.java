@@ -7,7 +7,7 @@
  * language in any way or for any other purposes whatsoever without the prior
  * written consent of Renan Azzolim.
  */
-package com.razzolim.food.api.controller.openapi;
+package com.razzolim.food.api.openapi.controller;
 
 import com.razzolim.food.api.exceptionhandler.Problem;
 import com.razzolim.food.api.model.CidadeModel;
