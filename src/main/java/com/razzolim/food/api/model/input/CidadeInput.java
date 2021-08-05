@@ -27,8 +27,8 @@ import lombok.Setter;
 @Getter
 public class CidadeInput {
 
-    @ApiModelProperty(example = "Uberlândia")
-    @NotBlank
+    @ApiModelProperty(example = "Uberlândia", required = true)
+    @NotBlank // not black não tem plugin...
     private String nome;
 
     @Valid

@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 
 /**
  * @author Renan Azzolim
@@ -25,7 +26,9 @@ import lombok.Setter;
 @Getter
 public class EstadoIdInput {
 
-    @ApiModelProperty(example = "1")
+    /* BeanValidatorPluginsConfiguration sobrescreve a anotação, se required nao está definido
+     * é utilizado o valor default = false*/
+    @ApiModelProperty(example = "1", required = true)
     @NotNull
     private Long id;
 
