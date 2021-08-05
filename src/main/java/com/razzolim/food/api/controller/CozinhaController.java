@@ -24,13 +24,14 @@ import com.razzolim.food.api.assembler.CozinhaInputDisassembler;
 import com.razzolim.food.api.assembler.CozinhaModelAssembler;
 import com.razzolim.food.api.model.CozinhaModel;
 import com.razzolim.food.api.model.input.CozinhaInput;
+import com.razzolim.food.api.openapi.controller.CozinhaControllerOpenApi;
 import com.razzolim.food.domain.model.Cozinha;
 import com.razzolim.food.domain.repository.CozinhaRepository;
 import com.razzolim.food.domain.service.CadastroCozinhaService;
 
 @RestController
 @RequestMapping("/cozinhas")
-public class CozinhaController {
+public class CozinhaController implements CozinhaControllerOpenApi {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
