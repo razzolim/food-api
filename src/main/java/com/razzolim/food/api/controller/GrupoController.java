@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.razzolim.food.api.assembler.GrupoInputDisassembler;
 import com.razzolim.food.api.assembler.GrupoModelAssembler;
+import com.razzolim.food.api.controller.openapi.GrupoControllerOpenApi;
 import com.razzolim.food.api.model.GrupoModel;
 import com.razzolim.food.api.model.input.GrupoInput;
 import com.razzolim.food.domain.model.Grupo;
@@ -41,7 +42,7 @@ import com.razzolim.food.domain.service.CadastroGrupoService;
  */
 @RestController
 @RequestMapping("/grupos")
-public class GrupoController {
+public class GrupoController implements GrupoControllerOpenApi {
 
     @Autowired
     private GrupoRepository grupoRepository;
