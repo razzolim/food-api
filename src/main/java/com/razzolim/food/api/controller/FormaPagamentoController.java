@@ -35,6 +35,7 @@ import com.razzolim.food.api.assembler.FormaPagamentoInputDisassembler;
 import com.razzolim.food.api.assembler.FormaPagamentoModelAssembler;
 import com.razzolim.food.api.model.FormaPagamentoModel;
 import com.razzolim.food.api.model.input.FormaPagamentoInput;
+import com.razzolim.food.api.openapi.controller.FormaPagamentoControllerOpenApi;
 import com.razzolim.food.domain.model.FormaPagamento;
 import com.razzolim.food.domain.repository.FormaPagamentoRepository;
 import com.razzolim.food.domain.service.CadastroFormaPagamentoService;
@@ -49,7 +50,7 @@ import com.razzolim.food.domain.service.CadastroFormaPagamentoService;
  */
 @RestController
 @RequestMapping("/formas-pagamento")
-public class FormaPagamentoController {
+public class FormaPagamentoController implements FormaPagamentoControllerOpenApi {
 
     @Autowired
     private FormaPagamentoRepository formaPagamentoRepository;
