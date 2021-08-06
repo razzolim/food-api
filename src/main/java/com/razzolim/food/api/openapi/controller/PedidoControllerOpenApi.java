@@ -47,8 +47,8 @@ public interface PedidoControllerOpenApi {
         @ApiResponse(code = 201, message = "Pedido registrado"),
     })
     public PedidoModel adicionar(
-            @ApiParam(name = "corpo", value = "Representa√ß√£o de um novo pedido")
-            PedidoInput pedidoInput);
+    		@ApiParam(name = "corpo", value = "RepresentaÁ„o de um novo pedido", required = true)
+    		PedidoInput pedidoInput);
     
     @ApiImplicitParams({
         @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por v√≠rgula",
@@ -59,6 +59,7 @@ public interface PedidoControllerOpenApi {
         @ApiResponse(code = 404, message = "Pedido n√£o encontrado", response = Problem.class)
     })
     public PedidoModel buscar(
-            @ApiParam(value = "C√≥digo de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55")
-            String codigoPedido);   
+    		@ApiParam(value = "CÛdigo de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55", 
+    			required = true)
+    		String codigoPedido);
 }
