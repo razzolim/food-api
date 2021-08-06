@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,12 +22,17 @@ import com.razzolim.food.api.assembler.RestauranteModelAssembler;
 import com.razzolim.food.api.model.RestauranteModel;
 import com.razzolim.food.api.model.input.RestauranteInput;
 import com.razzolim.food.api.model.view.RestauranteView;
+import com.razzolim.food.api.openapi.model.RestauranteBasicoModelOpenApi;
 import com.razzolim.food.domain.exception.CidadeNaoEncontradaException;
 import com.razzolim.food.domain.exception.CozinhaNaoEncontradaException;
 import com.razzolim.food.domain.exception.NegocioException;
 import com.razzolim.food.domain.model.Restaurante;
 import com.razzolim.food.domain.repository.RestauranteRepository;
 import com.razzolim.food.domain.service.CadastroRestauranteService;
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -52,12 +55,18 @@ public class RestauranteController {
     @Autowired
     private RestauranteInputDisassembler restauranteInputDisassembler;
 
+    @ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoModelOpenApi.class)
+    @ApiImplicitParams({
+    	@ApiImplicitParam(value = "Nome da projeção de pedidos", name = "projecao",
+    			paramType = "query", type = "string", allowableValues = "apenas-nome")
+    })
     @JsonView(RestauranteView.Resumo.class)
     @GetMapping
     public List<RestauranteModel> listar() {
 	return restauranteModelAssembler.toCollectionModel(restauranteRepository.findAll());
     }
 
+    @ApiOperation(value = "Lista restaurantes", hidden = true)
     @JsonView(RestauranteView.ApenasNome.class)
     @GetMapping(params = "projecao=apenas-nome")
     public List<RestauranteModel> listarResumido() {
