@@ -31,6 +31,7 @@ import com.razzolim.food.api.openapi.model.PageableModelOpenApi;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
@@ -68,6 +69,14 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+                .globalOperationParameters(Arrays.asList(
+                        new ParameterBuilder()
+                        .name("campos")
+                        .description("Nome das propriedades para filtrar na resposta, separados por vírgula")
+                        .parameterType("query")
+                        .modelRef(new ModelRef("string"))
+                        .build()
+                        ))
                 .ignoredParameterTypes(ServletWebRequest.class)
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
