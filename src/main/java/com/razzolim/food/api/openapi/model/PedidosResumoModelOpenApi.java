@@ -7,26 +7,19 @@
  * language in any way or for any other purposes whatsoever without the prior
  * written consent of Renan Azzolim.
  */
-package com.razzolim.food.api.model.input;
+package com.razzolim.food.api.openapi.model;
 
-import javax.validation.constraints.NotNull;
+import com.razzolim.food.api.model.PedidoResumoModel;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import io.swagger.annotations.ApiModel;
 
 /**
  * @author Renan Azzolim
  *
- * @since
+ * @since 
  * 
  */
-@Setter
-@Getter
-public class CidadeIdInput {
-
-    @ApiModelProperty(example = "1", required = true)
-    @NotNull
-    private Long id;
-
+@ApiModel("PedidosResumoModel")
+public class PedidosResumoModelOpenApi extends PagedModelOpenApi<PedidoResumoModel> {
+    
 }

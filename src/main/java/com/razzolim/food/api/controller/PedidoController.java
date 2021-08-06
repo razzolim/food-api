@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,7 @@ import com.razzolim.food.api.assembler.PedidoResumoModelAssembler;
 import com.razzolim.food.api.model.PedidoModel;
 import com.razzolim.food.api.model.PedidoResumoModel;
 import com.razzolim.food.api.model.input.PedidoInput;
+import com.razzolim.food.api.openapi.controller.PedidoControllerOpenApi;
 import com.razzolim.food.core.data.PageableTranslator;
 import com.razzolim.food.domain.exception.EntidadeNaoEncontradaException;
 import com.razzolim.food.domain.exception.NegocioException;
@@ -43,9 +45,6 @@ import com.razzolim.food.domain.repository.PedidoRepository;
 import com.razzolim.food.domain.service.EmissaoPedidoService;
 import com.razzolim.food.infrastructure.repository.spec.PedidoSpecs;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-
 /**
  * @author Renan Azzolim
  *
@@ -53,8 +52,8 @@ import io.swagger.annotations.ApiImplicitParams;
  * 
  */
 @RestController
-@RequestMapping(value = "/pedidos")
-public class PedidoController {
+@RequestMapping(path = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -90,11 +89,6 @@ public class PedidoController {
 	return pedidosWrapper;
     }*/
 
-    @ApiImplicitParams({
-        @ApiImplicitParam(
-                value = "Nomes das propriedades para filtrar na resposta, separados por vírgula.",
-                name = "campos", paramType = "query", type = "string")
-    })
     @GetMapping
     public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, Pageable pageable) {
 	
@@ -109,11 +103,6 @@ public class PedidoController {
 	return new PageImpl<>(pedidosResumoModel, pageable, pedidosPage.getTotalElements());
     }
 
-    @ApiImplicitParams({
-        @ApiImplicitParam(
-                value = "Nomes das propriedades para filtrar na resposta, separados por vírgula.",
-                name = "campos", paramType = "query", type = "string")
-    })
     @GetMapping("/{codigoPedido}")
     public PedidoModel buscar(@PathVariable String codigoPedido) {
 	Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
