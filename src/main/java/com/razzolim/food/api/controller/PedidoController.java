@@ -43,6 +43,9 @@ import com.razzolim.food.domain.repository.PedidoRepository;
 import com.razzolim.food.domain.service.EmissaoPedidoService;
 import com.razzolim.food.infrastructure.repository.spec.PedidoSpecs;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+
 /**
  * @author Renan Azzolim
  *
@@ -87,6 +90,11 @@ public class PedidoController {
 	return pedidosWrapper;
     }*/
 
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+                value = "Nomes das propriedades para filtrar na resposta, separados por vírgula.",
+                name = "campos", paramType = "query", type = "string")
+    })
     @GetMapping
     public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, Pageable pageable) {
 	
@@ -101,11 +109,17 @@ public class PedidoController {
 	return new PageImpl<>(pedidosResumoModel, pageable, pedidosPage.getTotalElements());
     }
 
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+                value = "Nomes das propriedades para filtrar na resposta, separados por vírgula.",
+                name = "campos", paramType = "query", type = "string")
+    })
     @GetMapping("/{codigoPedido}")
     public PedidoModel buscar(@PathVariable String codigoPedido) {
 	Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
 	return pedidoModelAssembler.toModel(pedido);
     }
+    
     
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
