@@ -32,33 +32,33 @@ public interface CidadeControllerOpenApi {
     @ApiResponses({
         @ApiResponse(code = 400, message = "ID da cidade invÃ¡lido", response = Problem.class),
         @ApiResponse(code = 404, message = "Cidade nÃ£o encontrada", response = Problem.class) })
-    public CidadeModel buscar(
+    CidadeModel buscar(
     		@ApiParam(value = "ID de uma cidade", example = "1", required = true)
     		Long cidadeId);
 
     @ApiOperation("Adiciona uma cidade")
     @ApiResponses({ 
         @ApiResponse(code = 201, message = "Cidade cadastrada") })
-    public CidadeModel adicionar(
-    		@ApiParam(name = "corpo", value = "Representação de uma nova cidade", required = true)
+    CidadeModel adicionar(
+    		@ApiParam(name = "corpo", value = "Representaï¿½ï¿½o de uma nova cidade", required = true)
     		CidadeInput cidadeInput);
 
     @ApiOperation("Atualiza uma cidade por ID")
     @ApiResponses({ 
         @ApiResponse(code = 200, message = "Cidade atualizada"),
         @ApiResponse(code = 404, message = "Cidade nÃ£o encontrada", response = Problem.class) })
-    public CidadeModel atualizar(
+    CidadeModel atualizar(
     		@ApiParam(value = "ID de uma cidade", example = "1", required = true) 
     		Long cidadeId,
     		
-    		@ApiParam(name = "corpo", value = "Representação de uma cidade com os novos dados")
+    		@ApiParam(name = "corpo", value = "Representaï¿½ï¿½o de uma cidade com os novos dados")
     		CidadeInput cidadeInput);
 
     @ApiOperation("Exclui uma cidade por ID")
     @ApiResponses({ 
         @ApiResponse(code = 204, message = "Cidade excluÃ­da"),
         @ApiResponse(code = 404, message = "Cidade nÃ£o encontrada", response = Problem.class) })
-    public void remover(
+    void remover(
     		@ApiParam(value = "ID de uma cidade", example = "1", required = true)
     		Long cidadeId);
 

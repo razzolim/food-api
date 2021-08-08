@@ -83,27 +83,13 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         typeResolver.resolve(Page.class, CozinhaModel.class),
                         CozinhasModelOpenApi.class))
                 .apiInfo(apiInfo())
-                .tags(new Tag("Cidades", "Gerencia as cidades"))
-                .tags(new Tag("Cidades", "Gerencia as cidades"),
-                        new Tag("Grupos", "Gerencia os grupos de usuários"))
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
                         new Tag("Grupos", "Gerencia os grupos de usuários"),
-                        new Tag("Cozinhas", "Gerencia as cozinhas"))
-                .tags(new Tag("Cidades", "Gerencia as cidades"),
-                        new Tag("Grupos", "Gerencia os grupos de usuários"),
-                        new Tag("Cozinhas", "Gerencia as cozinhas"),
-                        new Tag("Formas de pagamento", "Gerencia as formas de pagamento"))
-                .tags(new Tag("Cidades", "Gerencia as cidades"),
-                        new Tag("Grupos", "Gerencia os grupos de usuários"),
-                        new Tag("Cozinhas", "Gerencia as cozinhas"),
-                        new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
-                        new Tag("Pedidos", "Gerencia os pedidos"))
-                .tags(new Tag("Cidades", "Gerencia as cidades"),
-                        new Tag("Grupos", "Gerencia os grupos de usu�rios"),
                         new Tag("Cozinhas", "Gerencia as cozinhas"),
                         new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
                         new Tag("Pedidos", "Gerencia os pedidos"),
-                        new Tag("Restaurantes", "Gerencia os restaurantes"));
+                        new Tag("Restaurantes", "Gerencia os restaurantes"),
+                        new Tag("Estados", "Gerencia os estados"));
     }
     
     private List<ResponseMessage> globalGetResponseMessages() {
