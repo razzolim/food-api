@@ -32,11 +32,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.fasterxml.classmate.TypeResolver;
 import com.razzolim.food.api.exceptionhandler.Problem;
 import com.razzolim.food.api.model.CozinhaModel;
+import com.razzolim.food.api.model.PedidoResumoModel;
 import com.razzolim.food.api.openapi.model.CozinhasModelOpenApi;
 import com.razzolim.food.api.openapi.model.PageableModelOpenApi;
+import com.razzolim.food.api.openapi.model.PedidosResumoModelOpenApi;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
@@ -66,29 +69,25 @@ public class SpringFoxConfig implements WebMvcConfigurer {
         
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                    .apis(RequestHandlerSelectors.basePackage("com.razzolim.food.api"))
-//                    .paths(PathSelectors.ant("/restaurantes/*"))
+                    .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
+                    .paths(PathSelectors.any())
                     .build()
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
                 .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
-//                .globalOperationParameters(Arrays.asList(
-//                        new ParameterBuilder()
-//                        .name("campos")
-//                        .description("Nome das propriedades para filtrar na resposta, separados por vírgula")
-//                        .parameterType("query")
-//                        .modelRef(new ModelRef("string"))
-//                        .build()
-//                        ))
-                .ignoredParameterTypes(ServletWebRequest.class, URL.class, URI.class, URLStreamHandler.class, 
-                        Resource.class, File.class, InputStream.class)
                 .additionalModels(typeResolver.resolve(Problem.class))
+                .ignoredParameterTypes(ServletWebRequest.class,
+                        URL.class, URI.class, URLStreamHandler.class, Resource.class,
+                        File.class, InputStream.class)
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(Page.class, CozinhaModel.class),
                         CozinhasModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(Page.class, PedidoResumoModel.class),
+                        PedidosResumoModelOpenApi.class))
                 .apiInfo(apiInfo())
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
                         new Tag("Grupos", "Gerencia os grupos de usuários"),
@@ -98,7 +97,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         new Tag("Restaurantes", "Gerencia os restaurantes"),
                         new Tag("Estados", "Gerencia os estados"),
                         new Tag("Produtos", "Gerencia os produtos de restaurantes"));
-    }
+    } 
     
     private List<ResponseMessage> globalGetResponseMessages() {
         return Arrays.asList(
