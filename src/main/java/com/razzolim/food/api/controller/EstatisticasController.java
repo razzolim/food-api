@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.razzolim.food.api.openapi.controller.EstatisticasControllerOpenApi;
 import com.razzolim.food.domain.filter.VendaDiariaFilter;
 import com.razzolim.food.domain.model.dto.VendaDiaria;
 import com.razzolim.food.domain.service.VendaQueryService;
@@ -33,7 +34,7 @@ import com.razzolim.food.domain.service.VendaReportService;
  */
 @RestController
 @RequestMapping(path = "/estatisticas")
-public class EstatisticasController {
+public class EstatisticasController implements EstatisticasControllerOpenApi {
     
     @Autowired
     private VendaQueryService vendaQueryService;
@@ -48,7 +49,7 @@ public class EstatisticasController {
     }
     
     @GetMapping(value = "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> consultarVendasDiariasPDF(VendaDiariaFilter filtro, 
+    public ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaFilter filtro, 
 	    @RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {
 	byte[] bytesPdf = vendaReportService.emitirVendasDiarias(filtro, timeOffset);
 	
