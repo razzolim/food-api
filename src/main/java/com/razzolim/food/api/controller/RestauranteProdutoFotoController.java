@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.razzolim.food.api.assembler.FotoProdutoModelAssembler;
 import com.razzolim.food.api.model.FotoProdutoModel;
 import com.razzolim.food.api.model.input.FotoProdutoInput;
+import com.razzolim.food.api.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
 import com.razzolim.food.domain.exception.EntidadeNaoEncontradaException;
 import com.razzolim.food.domain.model.FotoProduto;
 import com.razzolim.food.domain.model.Produto;
@@ -49,8 +50,9 @@ import com.razzolim.food.domain.service.FotoStorageService.FotoRecuperada;
  * 
  */
 @RestController
-@RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
-public class RestauranteProdutoFotoController {
+@RequestMapping(path = "/restaurantes/{restauranteId}/produtos/{produtoId}/foto",
+produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteProdutoFotoController implements RestauranteProdutoFotoControllerOpenApi {
 
     @Autowired
     private CatalogoFotoProdutoService catalogoFotoProduto;
@@ -84,16 +86,17 @@ public class RestauranteProdutoFotoController {
 
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public FotoProdutoModel buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
 
         return assembler.toModel(fotoProduto);
     }
     
-    @GetMapping
-    public ResponseEntity<?> servirFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
-            @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
+    @GetMapping(produces = MediaType.ALL_VALUE)
+    public ResponseEntity<?> servir(@PathVariable Long restauranteId, 
+            @PathVariable Long produtoId, @RequestHeader(name = "accept") String acceptHeader) 
+                    throws HttpMediaTypeNotAcceptableException {
         
         try {
             FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
