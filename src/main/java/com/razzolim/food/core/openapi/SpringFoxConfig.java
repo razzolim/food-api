@@ -9,12 +9,18 @@
  */
 package com.razzolim.food.core.openapi;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLStreamHandler;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -76,7 +82,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 //                        .modelRef(new ModelRef("string"))
 //                        .build()
 //                        ))
-                .ignoredParameterTypes(ServletWebRequest.class)
+                .ignoredParameterTypes(ServletWebRequest.class, URL.class, URI.class, URLStreamHandler.class, 
+                        Resource.class, File.class, InputStream.class)
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                 .alternateTypeRules(AlternateTypeRules.newRule(
