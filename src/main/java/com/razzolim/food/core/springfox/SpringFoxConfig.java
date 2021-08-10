@@ -7,7 +7,7 @@
  * language in any way or for any other purposes whatsoever without the prior
  * written consent of Renan Azzolim.
  */
-package com.razzolim.food.core.openapi;
+package com.razzolim.food.core.springfox;
 
 import java.io.File;
 import java.io.InputStream;
