@@ -1,5 +1,8 @@
 package com.razzolim.food.api.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -61,7 +64,26 @@ public class CidadeController implements CidadeControllerOpenApi {
     public CidadeModel buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
         
-        return cidadeModelAssembler.toModel(cidade);
+        CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidade);
+        
+//        cidadeModel.add(new Link("http://localhost:8080/cidades/1"));
+//        cidadeModel.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
+//                .slash(cidadeModel.getId()).withSelfRel());
+        cidadeModel.add(linkTo(methodOn(CidadeController.class)
+                .buscar(cidadeModel.getId())).withSelfRel());
+        
+//        cidadeModel.add(new Link("http://localhost:8080/cidades", "cidades"));
+//        cidadeModel.add(linkTo(CidadeController.class).withRel("cidades"));
+        cidadeModel.add(linkTo(methodOn(CidadeController.class)
+                .listar()).withRel("cidades"));
+        
+//        cidadeModel.getEstado().add(new Link("http://localhost:8080/estados/1", "estados"));
+//        cidadeModel.getEstado().add(linkTo(EstadoController.class)
+//                .slash(cidadeModel.getEstado().getId()).withSelfRel());
+        cidadeModel.add(linkTo(methodOn(EstadoController.class)
+                .buscar(cidadeModel.getEstado().getId())).withSelfRel());
+        
+        return cidadeModel;
     }
 
     @PostMapping
