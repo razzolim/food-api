@@ -9,7 +9,7 @@
  */
 package com.razzolim.food.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import com.razzolim.food.api.exceptionhandler.Problem;
 import com.razzolim.food.api.model.UsuarioModel;
@@ -32,8 +32,8 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = "Usuários")
 public interface UsuarioControllerOpenApi {
 
-    @ApiOperation("Lista os usuários")
-    List<UsuarioModel> listar();
+	@ApiOperation("Lista os usuários")
+	CollectionModel<UsuarioModel> listar();
 
     @ApiOperation("Busca um usuário por ID")
     @ApiResponses({
