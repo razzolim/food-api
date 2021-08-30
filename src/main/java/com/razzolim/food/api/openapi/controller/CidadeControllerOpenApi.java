@@ -9,6 +9,8 @@
  */
 package com.razzolim.food.api.openapi.controller;
 
+import org.springframework.hateoas.CollectionModel;
+
 import com.razzolim.food.api.exceptionhandler.Problem;
 import com.razzolim.food.api.model.CidadeModel;
 import com.razzolim.food.api.model.input.CidadeInput;
@@ -27,6 +29,9 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(tags = "Cidades")
 public interface CidadeControllerOpenApi {
+	
+	@ApiOperation("Lista as cidades")
+    public CollectionModel<CidadeModel> listar();
 
     @ApiOperation("Busca uma cidade por ID")
     @ApiResponses({
