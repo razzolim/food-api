@@ -9,7 +9,7 @@
  */
 package com.razzolim.food.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import com.razzolim.food.api.exceptionhandler.Problem;
 import com.razzolim.food.api.model.EstadoModel;
@@ -30,8 +30,8 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = "Estados")
 public interface EstadoControllerOpenApi {
 
-    @ApiOperation("Lista os estados")
-    List<EstadoModel> listar();
+	@ApiOperation("Lista os estados")
+	CollectionModel<EstadoModel> listar();
 
     @ApiOperation("Busca um estado por ID")
     @ApiResponses({
