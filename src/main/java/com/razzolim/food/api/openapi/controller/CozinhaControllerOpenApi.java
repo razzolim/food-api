@@ -9,8 +9,8 @@
  */
 package com.razzolim.food.api.openapi.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 
 import com.razzolim.food.api.exceptionhandler.Problem;
 import com.razzolim.food.api.model.CozinhaModel;
@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiResponses;
 public interface CozinhaControllerOpenApi {
 
     @ApiOperation("Lista as cozinhas com paginação")
-    Page<CozinhaModel> listar(Pageable pageable);
+    PagedModel<CozinhaModel> listar(Pageable pageable);
     
     @ApiOperation("Busca uma cozinha por ID")
     @ApiResponses({

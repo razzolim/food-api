@@ -9,6 +9,9 @@
  */
 package com.razzolim.food.api.model;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import com.razzolim.food.api.model.view.RestauranteView;
 
@@ -22,9 +25,10 @@ import lombok.Setter;
  * @since
  * 
  */
+@Relation(collectionRelation = "cozinhas")
 @Getter
 @Setter
-public class CozinhaModel {
+public class CozinhaModel extends RepresentationModel<CozinhaModel>{
 
     
     @ApiModelProperty(example = "1")
