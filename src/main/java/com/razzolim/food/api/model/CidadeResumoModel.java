@@ -9,6 +9,9 @@
  */
 package com.razzolim.food.api.model;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,9 +22,10 @@ import lombok.Setter;
  * @since 
  * 
  */
+@Relation(collectionRelation = "cidades")
 @Setter
 @Getter
-public class CidadeResumoModel {
+public class CidadeResumoModel extends RepresentationModel<CidadeResumoModel> {
 
     @ApiModelProperty(example = "1")
     private Long id;

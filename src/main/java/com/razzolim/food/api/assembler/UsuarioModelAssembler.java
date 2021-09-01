@@ -9,14 +9,16 @@
  */
 package com.razzolim.food.api.assembler;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import com.razzolim.food.api.FoodLinks;
+import com.razzolim.food.api.controller.UsuarioController;
 import com.razzolim.food.api.model.UsuarioModel;
 import com.razzolim.food.domain.model.Usuario;
 
@@ -27,16 +29,34 @@ import com.razzolim.food.domain.model.Usuario;
  * 
  */
 @Component
-public class UsuarioModelAssembler {
+public class UsuarioModelAssembler 
+        extends RepresentationModelAssemblerSupport<Usuario, UsuarioModel> {
 
     @Autowired
     private ModelMapper modelMapper;
-
+    
+    @Autowired
+    private FoodLinks foodLinks;
+    
+    public UsuarioModelAssembler() {
+        super(UsuarioController.class, UsuarioModel.class);
+    }
+    
+    @Override
     public UsuarioModel toModel(Usuario usuario) {
-	return modelMapper.map(usuario, UsuarioModel.class);
+        UsuarioModel usuarioModel = createModelWithId(usuario.getId(), usuario);
+        modelMapper.map(usuario, usuarioModel);
+        
+        usuarioModel.add(foodLinks.linkToUsuarios("usuarios"));
+        
+        usuarioModel.add(foodLinks.linkToGruposUsuario(usuario.getId(), "grupos-usuario"));
+        
+        return usuarioModel;
     }
-
-    public List<UsuarioModel> toCollectionModel(Collection<Usuario> usuarios) {
-	return usuarios.stream().map(usuario -> toModel(usuario)).collect(Collectors.toList());
-    }
-}
+    
+    @Override
+    public CollectionModel<UsuarioModel> toCollectionModel(Iterable<? extends Usuario> entities) {
+        return super.toCollectionModel(entities)
+            .add(linkTo(UsuarioController.class).withSelfRel());
+    }   
+}  

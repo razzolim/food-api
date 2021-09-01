@@ -9,7 +9,7 @@
  */
 package com.razzolim.food.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import com.razzolim.food.api.exceptionhandler.Problem;
 import com.razzolim.food.api.model.UsuarioModel;
@@ -33,7 +33,7 @@ public interface RestauranteUsuarioResponsavelControllerOpenApi {
     @ApiResponses({
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    List<UsuarioModel> listar(
+    CollectionModel<UsuarioModel> listar(
             @ApiParam(value = "ID do restaurante", example = "1", required = true)
             Long restauranteId);
 

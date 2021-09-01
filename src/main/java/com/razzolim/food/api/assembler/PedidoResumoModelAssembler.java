@@ -9,13 +9,13 @@
  */
 package com.razzolim.food.api.assembler;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import com.razzolim.food.api.FoodLinks;
+import com.razzolim.food.api.controller.PedidoController;
 import com.razzolim.food.api.model.PedidoResumoModel;
 import com.razzolim.food.domain.model.Pedido;
 
@@ -26,17 +26,31 @@ import com.razzolim.food.domain.model.Pedido;
  * 
  */
 @Component
-public class PedidoResumoModelAssembler {
+public class PedidoResumoModelAssembler 
+        extends RepresentationModelAssemblerSupport<Pedido, PedidoResumoModel> {
 
     @Autowired
     private ModelMapper modelMapper;
+    
+    @Autowired
+    private FoodLinks foodLinks;
 
+    public PedidoResumoModelAssembler() {
+        super(PedidoController.class, PedidoResumoModel.class);
+    }
+    
+    @Override
     public PedidoResumoModel toModel(Pedido pedido) {
-	return modelMapper.map(pedido, PedidoResumoModel.class);
-    }
+        PedidoResumoModel pedidoModel = createModelWithId(pedido.getCodigo(), pedido);
+        modelMapper.map(pedido, pedidoModel);
+        
+        pedidoModel.add(foodLinks.linkToPedidos());
+        
+        pedidoModel.getRestaurante().add(
+        		foodLinks.linkToRestaurante(pedido.getRestaurante().getId()));
 
-    public List<PedidoResumoModel> toCollectionModel(List<Pedido> pedidos) {
-	return pedidos.stream().map(pedido -> toModel(pedido)).collect(Collectors.toList());
+        pedidoModel.getCliente().add(foodLinks.linkToUsuario(pedido.getCliente().getId()));
+        
+        return pedidoModel;
     }
-
 }

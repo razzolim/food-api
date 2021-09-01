@@ -9,14 +9,16 @@
  */
 package com.razzolim.food.api.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.collect.ImmutableMap;
 import com.razzolim.food.api.assembler.PedidoInputDisassembler;
 import com.razzolim.food.api.assembler.PedidoModelAssembler;
 import com.razzolim.food.api.assembler.PedidoResumoModelAssembler;
@@ -35,6 +36,7 @@ import com.razzolim.food.api.model.PedidoModel;
 import com.razzolim.food.api.model.PedidoResumoModel;
 import com.razzolim.food.api.model.input.PedidoInput;
 import com.razzolim.food.api.openapi.controller.PedidoControllerOpenApi;
+import com.razzolim.food.core.data.PageWrapper;
 import com.razzolim.food.core.data.PageableTranslator;
 import com.razzolim.food.domain.exception.EntidadeNaoEncontradaException;
 import com.razzolim.food.domain.exception.NegocioException;
@@ -55,86 +57,73 @@ import com.razzolim.food.infrastructure.repository.spec.PedidoSpecs;
 @RequestMapping(path = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PedidoController implements PedidoControllerOpenApi {
 
-    @Autowired
-    private PedidoRepository pedidoRepository;
+	@Autowired
+	private PedidoRepository pedidoRepository;
 
-    @Autowired
-    private EmissaoPedidoService emissaoPedido;
+	@Autowired
+	private EmissaoPedidoService emissaoPedido;
 
-    @Autowired
-    private PedidoModelAssembler pedidoModelAssembler;
+	@Autowired
+	private PedidoModelAssembler pedidoModelAssembler;
 
-    @Autowired
-    private PedidoResumoModelAssembler pedidoResumoModelAssembler;
-    
-    @Autowired
-    private PedidoInputDisassembler pedidoInputDisassembler;
-    
-    /*@GetMapping
-    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
-	List<Pedido> todosPedidos = pedidoRepository.findAll();
-	List<PedidoResumoModel> pedidosModel = pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
-	
-	MappingJacksonValue pedidosWrapper = new MappingJacksonValue(pedidosModel);
-	
-	SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-	filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
-	
-	if (StringUtils.isNotBlank(campos)) {
-	    filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
+	@Autowired
+	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+
+	@Autowired
+	private PedidoInputDisassembler pedidoInputDisassembler;
+
+	@Autowired
+	private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
+
+	@Override
+	@GetMapping
+	public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
+		pageable = traduzirPageable(pageable);
+
+		Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+		
+		pedidosPage = new PageWrapper<>(pedidosPage, pageable);
+
+		return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
 	}
-	
-	pedidosWrapper.setFilters(filterProvider);
-	
-	return pedidosWrapper;
-    }*/
 
-    @GetMapping
-    public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, Pageable pageable) {
-	
-	pageable = traduzirPageable(pageable);
-	
-	Page<Pedido> pedidosPage = pedidoRepository.findAll(
-		PedidoSpecs.usandoFiltro(filtro), pageable);
-	
-	List<PedidoResumoModel> pedidosResumoModel = pedidoResumoModelAssembler
-		.toCollectionModel(pedidosPage.getContent());
-	
-	return new PageImpl<>(pedidosResumoModel, pageable, pedidosPage.getTotalElements());
-    }
+	@GetMapping("/{codigoPedido}")
+	public PedidoModel buscar(@PathVariable String codigoPedido) {
+		Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
+		return pedidoModelAssembler.toModel(pedido);
+	}
 
-    @GetMapping("/{codigoPedido}")
-    public PedidoModel buscar(@PathVariable String codigoPedido) {
-	Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
-	return pedidoModelAssembler.toModel(pedido);
-    }
-    
-    
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public PedidoModel adicionar(@Valid @RequestBody PedidoInput pedidoInput) {
-        try {
-            Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public PedidoModel adicionar(@Valid @RequestBody PedidoInput pedidoInput) {
+		try {
+			Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
 
-            // TODO pegar usuário autenticado
-            novoPedido.setCliente(new Usuario());
-            novoPedido.getCliente().setId(1L);
+			// TODO pegar usuário autenticado
+			novoPedido.setCliente(new Usuario());
+			novoPedido.getCliente().setId(1L);
 
-            novoPedido = emissaoPedido.emitir(novoPedido);
+			novoPedido = emissaoPedido.emitir(novoPedido);
 
-            return pedidoModelAssembler.toModel(novoPedido);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage(), e);
-        }
-    }
-    
-    private Pageable traduzirPageable(Pageable pageable) {
-	var mapeamento = ImmutableMap.of(
-		"codigo", "codigo",
-		"restaurante.nome", "restaurante.nome",
-		"nomeCliente", "cliente.nome",
-		"valorTotal", "valorTotal");
-	
-	return PageableTranslator.translate(pageable, mapeamento);
-    }
+			return pedidoModelAssembler.toModel(novoPedido);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
+	}
+
+	private Pageable traduzirPageable(Pageable pageable) {
+		var mapeamento = Map.of(
+				"codigo", "codigo",
+				"subtotal", "subtotal",
+				"taxaFrete", "taxaFrete",
+				"valorTotal", "valorTotal",
+				"dataCriacao", "dataCriacao",
+				"nomeRestaurante", "restaurante.nome",
+				"restaurante.id", "restaurante.id",
+				"cliente.id", "cliente.id",
+				"cliente.nome", "cliente.nome"
+			);
+
+		return PageableTranslator.translate(pageable, mapeamento);
+	}
 }

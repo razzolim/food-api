@@ -10,7 +10,6 @@
 package com.razzolim.food.api.assembler;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,8 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import com.razzolim.food.api.FoodLinks;
 import com.razzolim.food.api.controller.CidadeController;
-import com.razzolim.food.api.controller.EstadoController;
 import com.razzolim.food.api.model.CidadeModel;
 import com.razzolim.food.domain.model.Cidade;
 
@@ -34,6 +33,9 @@ public class CidadeModelAssembler extends RepresentationModelAssemblerSupport<Ci
 
 	@Autowired
     private ModelMapper modelMapper;
+    
+    @Autowired
+    private FoodLinks foodLinks;
 
     public CidadeModelAssembler() {
 		super(CidadeController.class, CidadeModel.class);
@@ -41,14 +43,13 @@ public class CidadeModelAssembler extends RepresentationModelAssemblerSupport<Ci
 
     @Override
     public CidadeModel toModel(Cidade cidade) {
-    	CidadeModel cidadeModel = createModelWithId(cidade.getId(), cidade);
-    	modelMapper.map(cidade, cidadeModel);
-    	
-        cidadeModel.add(linkTo(methodOn(CidadeController.class)
-                .listar()).withRel("cidades"));
+        CidadeModel cidadeModel = createModelWithId(cidade.getId(), cidade);
         
-        cidadeModel.add(linkTo(methodOn(EstadoController.class)
-                .buscar(cidadeModel.getEstado().getId())).withSelfRel());
+        modelMapper.map(cidade, cidadeModel);
+        
+        cidadeModel.add(foodLinks.linkToCidades("cidades"));
+        
+        cidadeModel.getEstado().add(foodLinks.linkToEstado(cidadeModel.getEstado().getId()));
         
         return cidadeModel;
     }
