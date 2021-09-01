@@ -9,6 +9,8 @@
  */
 package com.razzolim.food.api.controller;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.collect.ImmutableMap;
 import com.razzolim.food.api.assembler.PedidoInputDisassembler;
 import com.razzolim.food.api.assembler.PedidoModelAssembler;
 import com.razzolim.food.api.assembler.PedidoResumoModelAssembler;
@@ -35,6 +36,7 @@ import com.razzolim.food.api.model.PedidoModel;
 import com.razzolim.food.api.model.PedidoResumoModel;
 import com.razzolim.food.api.model.input.PedidoInput;
 import com.razzolim.food.api.openapi.controller.PedidoControllerOpenApi;
+import com.razzolim.food.core.data.PageWrapper;
 import com.razzolim.food.core.data.PageableTranslator;
 import com.razzolim.food.domain.exception.EntidadeNaoEncontradaException;
 import com.razzolim.food.domain.exception.NegocioException;
@@ -79,6 +81,8 @@ public class PedidoController implements PedidoControllerOpenApi {
 		pageable = traduzirPageable(pageable);
 
 		Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+		
+		pedidosPage = new PageWrapper<>(pedidosPage, pageable);
 
 		return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
 	}
@@ -108,8 +112,17 @@ public class PedidoController implements PedidoControllerOpenApi {
 	}
 
 	private Pageable traduzirPageable(Pageable pageable) {
-		var mapeamento = ImmutableMap.of("codigo", "codigo", "restaurante.nome", "restaurante.nome", "nomeCliente",
-				"cliente.nome", "valorTotal", "valorTotal");
+		var mapeamento = Map.of(
+				"codigo", "codigo",
+				"subtotal", "subtotal",
+				"taxaFrete", "taxaFrete",
+				"valorTotal", "valorTotal",
+				"dataCriacao", "dataCriacao",
+				"nomeRestaurante", "restaurante.nome",
+				"restaurante.id", "restaurante.id",
+				"cliente.id", "cliente.id",
+				"cliente.nome", "cliente.nome"
+			);
 
 		return PageableTranslator.translate(pageable, mapeamento);
 	}
