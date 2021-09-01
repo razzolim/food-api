@@ -9,9 +9,6 @@
  */
 package com.razzolim.food.api.controller;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -24,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.razzolim.food.api.FoodLinks;
 import com.razzolim.food.api.assembler.UsuarioModelAssembler;
 import com.razzolim.food.api.model.UsuarioModel;
 import com.razzolim.food.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
@@ -45,16 +43,19 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
 
 	@Autowired
 	private UsuarioModelAssembler usuarioModelAssembler;
+    
+    @Autowired
+    private FoodLinks foodLinks;
 
-	@GetMapping
-	public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId) {
-		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
-
-		return usuarioModelAssembler.toCollectionModel(restaurante.getResponsaveis())
-				.removeLinks()
-				.add(linkTo(methodOn(RestauranteUsuarioResponsavelController.class)
-						.listar(restauranteId)).withSelfRel());
-	}
+    @Override
+    @GetMapping
+    public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId) {
+        Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
+        
+        return usuarioModelAssembler.toCollectionModel(restaurante.getResponsaveis())
+                .removeLinks()
+                .add(foodLinks.linkToResponsaveisRestaurante(restauranteId));
+    }
 
 	@DeleteMapping("/{usuarioId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

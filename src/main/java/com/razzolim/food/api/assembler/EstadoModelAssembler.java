@@ -17,6 +17,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import com.razzolim.food.api.FoodLinks;
 import com.razzolim.food.api.controller.EstadoController;
 import com.razzolim.food.api.model.EstadoModel;
 import com.razzolim.food.domain.model.Estado;
@@ -34,6 +35,9 @@ public class EstadoModelAssembler
     @Autowired
     private ModelMapper modelMapper;
     
+    @Autowired
+    private FoodLinks foodLinks;
+    
     public EstadoModelAssembler() {
         super(EstadoController.class, EstadoModel.class);
     }
@@ -43,7 +47,7 @@ public class EstadoModelAssembler
         EstadoModel estadoModel = createModelWithId(estado.getId(), estado);
         modelMapper.map(estado, estadoModel);
         
-        estadoModel.add(linkTo(EstadoController.class).withRel("estados"));
+        estadoModel.add(foodLinks.linkToEstados("estados"));
         
         return estadoModel;
     }

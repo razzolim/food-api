@@ -9,13 +9,12 @@
  */
 package com.razzolim.food.api.assembler;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import com.razzolim.food.api.FoodLinks;
 import com.razzolim.food.api.controller.CozinhaController;
 import com.razzolim.food.api.model.CozinhaModel;
 import com.razzolim.food.domain.model.Cozinha;
@@ -32,16 +31,19 @@ public class CozinhaModelAssembler extends RepresentationModelAssemblerSupport<C
     @Autowired
     private ModelMapper modelMapper;
     
+    @Autowired
+    private FoodLinks foodLinks;
+    
     public CozinhaModelAssembler() {
     	super(CozinhaController.class, CozinhaModel.class);
     }
     
     @Override
     public CozinhaModel toModel(Cozinha cozinha) {
-    	CozinhaModel cozinhaModel = createModelWithId(cozinha.getId(), cozinha);
-    	modelMapper.map(cozinha, cozinhaModel);
-    	cozinhaModel.add(linkTo(CozinhaController.class).withRel("cozinhas"));
-    	return cozinhaModel;
+        CozinhaModel cozinhaModel = createModelWithId(cozinha.getId(), cozinha);
+        modelMapper.map(cozinha, cozinhaModel);
+        cozinhaModel.add(foodLinks.linkToCozinhas("cozinhas"));
+        return cozinhaModel;
     }
     
 } 
