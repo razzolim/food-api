@@ -20,7 +20,7 @@ import com.razzolim.food.domain.model.Restaurante;
 import com.razzolim.food.domain.service.CadastroRestauranteService;
 
 @RestController
-@RequestMapping(path = "/restaurantes/{restauranteId}/formas-pagamento",
+@RequestMapping(path = "/v1/restaurantes/{restauranteId}/formas-pagamento",
 produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteFormaPagamentoController implements RestauranteFormaPagamentoControllerOpenApi {
 

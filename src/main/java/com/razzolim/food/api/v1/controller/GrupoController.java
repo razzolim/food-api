@@ -42,7 +42,7 @@ import com.razzolim.food.domain.service.CadastroGrupoService;
  * 
  */
 @RestController
-@RequestMapping(value = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GrupoController implements GrupoControllerOpenApi {
 
     @Autowired

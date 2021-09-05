@@ -29,7 +29,7 @@ import com.razzolim.food.domain.repository.CozinhaRepository;
 import com.razzolim.food.domain.service.CadastroCozinhaService;
 
 @RestController
-@RequestMapping("/cozinhas")
+@RequestMapping("/v1/cozinhas")
 public class CozinhaController implements CozinhaControllerOpenApi {
 
     @Autowired

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,6 @@ import com.razzolim.food.api.v2.assembler.CidadeInputDisassemblerV2;
 import com.razzolim.food.api.v2.assembler.CidadeModelAssemblerV2;
 import com.razzolim.food.api.v2.model.CidadeModelV2;
 import com.razzolim.food.api.v2.model.input.CidadeInputV2;
-import com.razzolim.food.core.web.FoodMediaTypes;
 import com.razzolim.food.domain.exception.EstadoNaoEncontradoException;
 import com.razzolim.food.domain.exception.NegocioException;
 import com.razzolim.food.domain.model.Cidade;
@@ -35,7 +35,7 @@ import com.razzolim.food.domain.repository.CidadeRepository;
 import com.razzolim.food.domain.service.CadastroCidadeService;
 
 @RestController
-@RequestMapping(value = "/cidades", produces = FoodMediaTypes.V2_APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v2/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CidadeControllerV2 {
 
 	@Autowired

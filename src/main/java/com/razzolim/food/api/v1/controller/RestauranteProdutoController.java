@@ -44,7 +44,7 @@ import com.razzolim.food.domain.service.CadastroRestauranteService;
  * 
  */
 @RestController
-@RequestMapping(path = "/restaurantes/{restauranteId}/produtos", 
+@RequestMapping(path = "/v1/restaurantes/{restauranteId}/produtos", 
     produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteProdutoController implements RestauranteProdutoControllerOpenApi {  
 
