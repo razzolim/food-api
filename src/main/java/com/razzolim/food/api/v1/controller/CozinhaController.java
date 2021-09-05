@@ -28,6 +28,9 @@ import com.razzolim.food.domain.model.Cozinha;
 import com.razzolim.food.domain.repository.CozinhaRepository;
 import com.razzolim.food.domain.service.CadastroCozinhaService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/v1/cozinhas")
 public class CozinhaController implements CozinhaControllerOpenApi {
@@ -35,58 +38,56 @@ public class CozinhaController implements CozinhaControllerOpenApi {
     @Autowired
     private CozinhaRepository cozinhaRepository;
 
-    @Autowired
-    private CadastroCozinhaService cadastroCozinha;
-    
-    @Autowired
-    private CozinhaModelAssembler cozinhaModelAssembler;
+	@Autowired
+	private CadastroCozinhaService cadastroCozinha;
 
-    @Autowired
-    private CozinhaInputDisassembler cozinhaInputDisassembler;  
-    
-    @Autowired
-    private PagedResourcesAssembler<Cozinha> pagedResourceAssembler;
+	@Autowired
+	private CozinhaModelAssembler cozinhaModelAssembler;
 
-    @GetMapping
-    public PagedModel<CozinhaModel> listar(@PageableDefault(size = 10) Pageable pageable) {
-        Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
-        
-        PagedModel<CozinhaModel> cozinhasPagedModel = pagedResourceAssembler
-        		.toModel(cozinhasPage, cozinhaModelAssembler);
-        
-        return cozinhasPagedModel;
-    }
+	@Autowired
+	private CozinhaInputDisassembler cozinhaInputDisassembler;
 
-    @GetMapping("/{cozinhaId}")
-    public CozinhaModel buscar(@PathVariable Long cozinhaId) {
-        Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
-        
-        return cozinhaModelAssembler.toModel(cozinha);
-    }
+	@Autowired
+	private PagedResourcesAssembler<Cozinha> pagedResourceAssembler;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
-        Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
-        cozinha = cadastroCozinha.salvar(cozinha);
-        
-        return cozinhaModelAssembler.toModel(cozinha);
-    }
+	@GetMapping
+	public PagedModel<CozinhaModel> listar(@PageableDefault(size = 10) Pageable pageable) {
+		log.info("Consultando cozinhas com páginas de {} registros...", pageable.getPageSize());
+		
+		Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 
-    @PutMapping("/{cozinhaId}")
-    public CozinhaModel atualizar(@PathVariable Long cozinhaId,
-            @RequestBody @Valid CozinhaInput cozinhaInput) {
-        Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(cozinhaId);
-        cozinhaInputDisassembler.copyToDomainObject(cozinhaInput, cozinhaAtual);
-        cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
-        
-        return cozinhaModelAssembler.toModel(cozinhaAtual);
-    }
+		return pagedResourceAssembler.toModel(cozinhasPage, cozinhaModelAssembler);
+	}
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable Long id) {
-	cadastroCozinha.excluir(id);
-    }
+	@GetMapping("/{cozinhaId}")
+	public CozinhaModel buscar(@PathVariable Long cozinhaId) {
+		Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
+
+		return cozinhaModelAssembler.toModel(cozinha);
+	}
+
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
+		Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
+		cozinha = cadastroCozinha.salvar(cozinha);
+
+		return cozinhaModelAssembler.toModel(cozinha);
+	}
+
+	@PutMapping("/{cozinhaId}")
+	public CozinhaModel atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaInput cozinhaInput) {
+		Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(cozinhaId);
+		cozinhaInputDisassembler.copyToDomainObject(cozinhaInput, cozinhaAtual);
+		cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
+
+		return cozinhaModelAssembler.toModel(cozinhaAtual);
+	}
+
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long id) {
+		cadastroCozinha.excluir(id);
+	}
 
 }
