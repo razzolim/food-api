@@ -13,8 +13,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.razzolim.food.api.model.EnderecoModel;
-import com.razzolim.food.api.model.input.ItemPedidoInput;
+import com.razzolim.food.api.v1.model.EnderecoModel;
+import com.razzolim.food.api.v1.model.input.ItemPedidoInput;
+import com.razzolim.food.api.v2.model.input.CidadeInputV2;
+import com.razzolim.food.domain.model.Cidade;
 import com.razzolim.food.domain.model.Endereco;
 import com.razzolim.food.domain.model.ItemPedido;
 
@@ -30,6 +32,9 @@ public class ModelMapperConfig {
     @Bean
     public ModelMapper modelMapper() {
 	var modelMapper = new ModelMapper();
+
+	modelMapper.createTypeMap(CidadeInputV2.class, Cidade.class)
+	    .addMappings(mapper -> mapper.skip(Cidade::setId)); 
 	
 	// utilizado para customizar o mapeamento das propriedades
 //	modelMapper.createTypeMap(Restaurante.class, RestauranteModel.class)
