@@ -22,7 +22,7 @@ public class ApiRetirementHandler extends HandlerInterceptorAdapter {
 		return true;
 	}*/
 	
-	@Override
+	/*@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		if (request.getRequestURI().startsWith("/v1")) {
@@ -30,7 +30,7 @@ public class ApiRetirementHandler extends HandlerInterceptorAdapter {
 		}
 		
 		return false;
-	}
+	}*/
 	
 	
 }
