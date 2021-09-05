@@ -31,11 +31,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.razzolim.food.api.exceptionhandler.Problem;
-import com.razzolim.food.api.model.CozinhaModel;
-import com.razzolim.food.api.model.PedidoResumoModel;
-import com.razzolim.food.api.openapi.model.CozinhasModelOpenApi;
-import com.razzolim.food.api.openapi.model.PageableModelOpenApi;
-import com.razzolim.food.api.openapi.model.PedidosResumoModelOpenApi;
+import com.razzolim.food.api.v1.model.CozinhaModel;
+import com.razzolim.food.api.v1.model.PedidoResumoModel;
+import com.razzolim.food.api.v1.openapi.model.CozinhasModelOpenApi;
+import com.razzolim.food.api.v1.openapi.model.PageableModelOpenApi;
+import com.razzolim.food.api.v1.openapi.model.PedidosResumoModelOpenApi;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;

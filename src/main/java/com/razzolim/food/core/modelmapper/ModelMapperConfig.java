@@ -13,8 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.razzolim.food.api.model.EnderecoModel;
-import com.razzolim.food.api.model.input.ItemPedidoInput;
+import com.razzolim.food.api.v1.model.EnderecoModel;
+import com.razzolim.food.api.v1.model.input.ItemPedidoInput;
 import com.razzolim.food.domain.model.Endereco;
 import com.razzolim.food.domain.model.ItemPedido;
 
