@@ -28,6 +28,7 @@ import com.razzolim.food.api.v2.assembler.CidadeInputDisassemblerV2;
 import com.razzolim.food.api.v2.assembler.CidadeModelAssemblerV2;
 import com.razzolim.food.api.v2.model.CidadeModelV2;
 import com.razzolim.food.api.v2.model.input.CidadeInputV2;
+import com.razzolim.food.api.v2.openapi.controller.CidadeControllerV2OpenApi;
 import com.razzolim.food.domain.exception.EstadoNaoEncontradoException;
 import com.razzolim.food.domain.exception.NegocioException;
 import com.razzolim.food.domain.model.Cidade;
@@ -36,7 +37,7 @@ import com.razzolim.food.domain.service.CadastroCidadeService;
 
 @RestController
 @RequestMapping(value = "/v2/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CidadeControllerV2 {
+public class CidadeControllerV2 implements CidadeControllerV2OpenApi {
 
 	@Autowired
 	private CidadeRepository cidadeRepository;

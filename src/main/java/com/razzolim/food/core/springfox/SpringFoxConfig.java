@@ -23,7 +23,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Links;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -37,6 +38,10 @@ import com.razzolim.food.api.v1.model.PedidoResumoModel;
 import com.razzolim.food.api.v1.openapi.model.CozinhasModelOpenApi;
 import com.razzolim.food.api.v1.openapi.model.PageableModelOpenApi;
 import com.razzolim.food.api.v1.openapi.model.PedidosResumoModelOpenApi;
+import com.razzolim.food.api.v2.model.CidadeModelV2;
+import com.razzolim.food.api.v2.model.CozinhaModelV2;
+import com.razzolim.food.api.v2.openapi.model.CidadesModelV2OpenApi;
+import com.razzolim.food.api.v2.openapi.model.CozinhasModelV2OpenApi;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -121,13 +126,15 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         URL.class, URI.class, URLStreamHandler.class, Resource.class,
                         File.class, InputStream.class)
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
-//                .alternateTypeRules(AlternateTypeRules.newRule(
-//                        typeResolver.resolve(Page.class, CozinhaModel.class),
-//                        CozinhasModelOpenApi.class))
-//                .alternateTypeRules(AlternateTypeRules.newRule(
-//                        typeResolver.resolve(Page.class, PedidoResumoModel.class),
-//                        PedidosResumoModelOpenApi.class))
-                .apiInfo(apiInfoV2());
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                	    typeResolver.resolve(PagedModel.class, CozinhaModelV2.class),
+                	    CozinhasModelV2OpenApi.class))
+            	.alternateTypeRules(AlternateTypeRules.newRule(
+            	        typeResolver.resolve(CollectionModel.class, CidadeModelV2.class),
+            	        CidadesModelV2OpenApi.class))
+            	.apiInfo(apiInfoV2())            	        
+            	.tags(new Tag("Cidades", "Gerencia as cidades"),
+                	        new Tag("Cozinhas", "Gerencia as cozinhas"));
     }
     
     private List<ResponseMessage> globalGetResponseMessages() {
