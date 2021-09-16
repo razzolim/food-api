@@ -38,6 +38,7 @@ import com.razzolim.food.api.v1.model.input.PedidoInput;
 import com.razzolim.food.api.v1.openapi.controller.PedidoControllerOpenApi;
 import com.razzolim.food.core.data.PageWrapper;
 import com.razzolim.food.core.data.PageableTranslator;
+import com.razzolim.food.core.security.FoodSecurity;
 import com.razzolim.food.domain.exception.EntidadeNaoEncontradaException;
 import com.razzolim.food.domain.exception.NegocioException;
 import com.razzolim.food.domain.filter.PedidoFilter;
@@ -74,6 +75,9 @@ public class PedidoController implements PedidoControllerOpenApi {
 
 	@Autowired
 	private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
+	
+	@Autowired
+	private FoodSecurity foodSecurity;
 
 	@Override
 	@GetMapping
@@ -99,9 +103,8 @@ public class PedidoController implements PedidoControllerOpenApi {
 		try {
 			Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
 
-			// TODO pegar usuário autenticado
 			novoPedido.setCliente(new Usuario());
-			novoPedido.getCliente().setId(1L);
+			novoPedido.getCliente().setId(foodSecurity.getUsuarioId());
 
 			novoPedido = emissaoPedido.emitir(novoPedido);
 
