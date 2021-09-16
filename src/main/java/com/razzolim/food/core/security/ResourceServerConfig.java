@@ -1,32 +1,46 @@
 package com.razzolim.food.core.security;
 
-import javax.crypto.spec.SecretKeySpec;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-			.authorizeRequests()
-				.anyRequest().authenticated()
-			.and()
+		.csrf().disable()
 			.cors().and()
-			.oauth2ResourceServer().jwt();
+			.oauth2ResourceServer()
+				.jwt()
+				.jwtAuthenticationConverter(jwtAuthenticationConverter());
 	}
 	
-	@Bean
-	public JwtDecoder jetDecoder() {
-		var secretKey = new SecretKeySpec("jd29083jd823jd209dj20d0930j98qwh4q8wj398qj3".getBytes(), "HmacSHA256");
-		return NimbusJwtDecoder.withSecretKey(secretKey).build();
+	private JwtAuthenticationConverter jwtAuthenticationConverter() {
+		var jwtAuthenticationConverter = new JwtAuthenticationConverter();
+		
+		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+			var authorities = jwt.getClaimAsStringList("authorities");
+			
+			if (authorities == null) {
+				authorities = Collections.emptyList();
+			}
+			
+			return authorities.stream()
+					.map(SimpleGrantedAuthority::new)
+					.collect(Collectors.toList());
+		});
+		
+		return jwtAuthenticationConverter;
 	}
 }
