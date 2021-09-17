@@ -36,6 +36,7 @@ import com.razzolim.food.api.v1.assembler.FotoProdutoModelAssembler;
 import com.razzolim.food.api.v1.model.FotoProdutoModel;
 import com.razzolim.food.api.v1.model.input.FotoProdutoInput;
 import com.razzolim.food.api.v1.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
+import com.razzolim.food.core.security.CheckSecurity;
 import com.razzolim.food.domain.exception.EntidadeNaoEncontradaException;
 import com.razzolim.food.domain.model.FotoProduto;
 import com.razzolim.food.domain.model.Produto;
@@ -67,13 +68,12 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
     @Autowired
     private FotoProdutoModelAssembler assembler;
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @Override
     @PutMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
             @Valid FotoProdutoInput fotoProdutoInput, @RequestPart(required = true) MultipartFile arquivo) throws IOException {
         Produto produto = cadastroProduto.buscarOuFalhar(restauranteId, produtoId);
-
-//        MultipartFile arquivo = fotoProdutoInput.getArquivo();
 
         FotoProduto foto = new FotoProduto();
         foto.setProduto(produto);
@@ -88,12 +88,14 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 
     }
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public FotoProdutoModel buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
 
         return assembler.toModel(fotoProduto);
     }
+    
     
     @GetMapping(produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> servir(@PathVariable Long restauranteId, 
@@ -125,6 +127,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
         }
     }
     
+    @CheckSecurity.Restaurantes.PodeEditar
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long restauranteId, 
