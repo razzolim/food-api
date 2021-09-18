@@ -68,7 +68,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
     @Autowired
     private FotoProdutoModelAssembler assembler;
 
-    @CheckSecurity.Restaurantes.PodeEditar
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Override
     @PutMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
@@ -127,7 +127,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
         }
     }
     
-    @CheckSecurity.Restaurantes.PodeEditar
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long restauranteId, 
