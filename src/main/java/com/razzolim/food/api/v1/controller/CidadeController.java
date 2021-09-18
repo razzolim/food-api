@@ -108,7 +108,7 @@ public class CidadeController implements CidadeControllerOpenApi {
     @DeleteMapping("/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cidadeId) {
-	cadastroCidade.excluir(cidadeId);
+    	cadastroCidade.excluir(cidadeId);
     }
     
     @CheckSecurity.Cidades.PodeConsultar

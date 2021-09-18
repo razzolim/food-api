@@ -31,6 +31,7 @@ import com.razzolim.food.api.v1.assembler.GrupoModelAssembler;
 import com.razzolim.food.api.v1.model.GrupoModel;
 import com.razzolim.food.api.v1.model.input.GrupoInput;
 import com.razzolim.food.api.v1.openapi.controller.GrupoControllerOpenApi;
+import com.razzolim.food.core.security.CheckSecurity;
 import com.razzolim.food.domain.model.Grupo;
 import com.razzolim.food.domain.repository.GrupoRepository;
 import com.razzolim.food.domain.service.CadastroGrupoService;
@@ -45,57 +46,61 @@ import com.razzolim.food.domain.service.CadastroGrupoService;
 @RequestMapping(value = "/v1/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GrupoController implements GrupoControllerOpenApi {
 
-    @Autowired
-    private GrupoRepository grupoRepository;
+	@Autowired
+	private GrupoRepository grupoRepository;
 
-    @Autowired
-    private CadastroGrupoService cadastroGrupo;
+	@Autowired
+	private CadastroGrupoService cadastroGrupo;
 
-    @Autowired
-    private GrupoModelAssembler grupoModelAssembler;
+	@Autowired
+	private GrupoModelAssembler grupoModelAssembler;
 
-    @Autowired
-    private GrupoInputDisassembler grupoInputDisassembler;
+	@Autowired
+	private GrupoInputDisassembler grupoInputDisassembler;
 
-    @GetMapping
-    public List<GrupoModel> listar() {
-	List<Grupo> todosGrupos = grupoRepository.findAll();
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+	@GetMapping
+	public List<GrupoModel> listar() {
+		List<Grupo> todosGrupos = grupoRepository.findAll();
 
-	return grupoModelAssembler.toCollectionModel(todosGrupos);
-    }
+		return grupoModelAssembler.toCollectionModel(todosGrupos);
+	}
 
-    @GetMapping("/{grupoId}")
-    public GrupoModel buscar(@PathVariable Long grupoId) {
-	Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+	@GetMapping("/{grupoId}")
+	public GrupoModel buscar(@PathVariable Long grupoId) {
+		Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
 
-	return grupoModelAssembler.toModel(grupo);
-    }
+		return grupoModelAssembler.toModel(grupo);
+	}
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public GrupoModel adicionar(@RequestBody @Valid GrupoInput grupoInput) {
-	Grupo grupo = grupoInputDisassembler.toDomainObject(grupoInput);
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public GrupoModel adicionar(@RequestBody @Valid GrupoInput grupoInput) {
+		Grupo grupo = grupoInputDisassembler.toDomainObject(grupoInput);
 
-	grupo = cadastroGrupo.salvar(grupo);
+		grupo = cadastroGrupo.salvar(grupo);
 
-	return grupoModelAssembler.toModel(grupo);
-    }
+		return grupoModelAssembler.toModel(grupo);
+	}
 
-    @PutMapping("/{grupoId}")
-    public GrupoModel atualizar(@PathVariable Long grupoId,
-	    @RequestBody @Valid GrupoInput grupoInput) {
-	Grupo grupoAtual = cadastroGrupo.buscarOuFalhar(grupoId);
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
+	@PutMapping("/{grupoId}")
+	public GrupoModel atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoInput grupoInput) {
+		Grupo grupoAtual = cadastroGrupo.buscarOuFalhar(grupoId);
 
-	grupoInputDisassembler.copyToDomainObject(grupoInput, grupoAtual);
+		grupoInputDisassembler.copyToDomainObject(grupoInput, grupoAtual);
 
-	grupoAtual = cadastroGrupo.salvar(grupoAtual);
+		grupoAtual = cadastroGrupo.salvar(grupoAtual);
 
-	return grupoModelAssembler.toModel(grupoAtual);
-    }
+		return grupoModelAssembler.toModel(grupoAtual);
+	}
 
-    @DeleteMapping("/{grupoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable Long grupoId) {
-	cadastroGrupo.excluir(grupoId);
-    }
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
+	@DeleteMapping("/{grupoId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long grupoId) {
+		cadastroGrupo.excluir(grupoId);
+	}
 }

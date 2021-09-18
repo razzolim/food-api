@@ -25,36 +25,34 @@ import com.razzolim.food.domain.model.Estado;
 /**
  * @author Renan Azzolim
  *
- * @since 
+ * @since
  * 
  */
 @Component
-public class EstadoModelAssembler 
-        extends RepresentationModelAssemblerSupport<Estado, EstadoModel> {
+public class EstadoModelAssembler extends RepresentationModelAssemblerSupport<Estado, EstadoModel> {
 
-    @Autowired
-    private ModelMapper modelMapper;
-    
-    @Autowired
-    private FoodLinks foodLinks;
-    
-    public EstadoModelAssembler() {
-        super(EstadoController.class, EstadoModel.class);
-    }
-    
-    @Override
-    public EstadoModel toModel(Estado estado) {
-        EstadoModel estadoModel = createModelWithId(estado.getId(), estado);
-        modelMapper.map(estado, estadoModel);
-        
-        estadoModel.add(foodLinks.linkToEstados("estados"));
-        
-        return estadoModel;
-    }
-    
-    @Override
-    public CollectionModel<EstadoModel> toCollectionModel(Iterable<? extends Estado> entities) {
-        return super.toCollectionModel(entities)
-            .add(linkTo(EstadoController.class).withSelfRel());
-    }   
-} 	
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@Autowired
+	private FoodLinks foodLinks;
+
+	public EstadoModelAssembler() {
+		super(EstadoController.class, EstadoModel.class);
+	}
+
+	@Override
+	public EstadoModel toModel(Estado estado) {
+		EstadoModel estadoModel = createModelWithId(estado.getId(), estado);
+		modelMapper.map(estado, estadoModel);
+
+		estadoModel.add(foodLinks.linkToEstados("estados"));
+
+		return estadoModel;
+	}
+
+	@Override
+	public CollectionModel<EstadoModel> toCollectionModel(Iterable<? extends Estado> entities) {
+		return super.toCollectionModel(entities).add(linkTo(EstadoController.class).withSelfRel());
+	}
+}
