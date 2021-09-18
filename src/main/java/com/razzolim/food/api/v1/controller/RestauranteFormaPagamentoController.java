@@ -16,37 +16,40 @@ import org.springframework.web.bind.annotation.RestController;
 import com.razzolim.food.api.v1.assembler.FormaPagamentoModelAssembler;
 import com.razzolim.food.api.v1.model.FormaPagamentoModel;
 import com.razzolim.food.api.v1.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
+import com.razzolim.food.core.security.CheckSecurity;
 import com.razzolim.food.domain.model.Restaurante;
 import com.razzolim.food.domain.service.CadastroRestauranteService;
 
 @RestController
-@RequestMapping(path = "/v1/restaurantes/{restauranteId}/formas-pagamento",
-produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/restaurantes/{restauranteId}/formas-pagamento", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteFormaPagamentoController implements RestauranteFormaPagamentoControllerOpenApi {
 
-    @Autowired
-    private CadastroRestauranteService cadastroRestaurante;
-    
-    @Autowired
-    private FormaPagamentoModelAssembler formaPagamentoModelAssembler;
+	@Autowired
+	private CadastroRestauranteService cadastroRestaurante;
 
-    @GetMapping
-    public List<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
-	Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
-	
-	return formaPagamentoModelAssembler.toCollectionModel(restaurante.getFormasPagamento());
-    }
-    
-    @DeleteMapping("/{formaPagamentoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
-	cadastroRestaurante.desassociarFormaPagamento(restauranteId, formaPagamentoId);
-    }
-    
-    @PutMapping("/{formaPagamentoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
-	cadastroRestaurante.associarFormaPagamento(restauranteId, formaPagamentoId);
-    }
+	@Autowired
+	private FormaPagamentoModelAssembler formaPagamentoModelAssembler;
+
+	@CheckSecurity.Restaurantes.PodeConsultar
+	@GetMapping
+	public List<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
+		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
+
+		return formaPagamentoModelAssembler.toCollectionModel(restaurante.getFormasPagamento());
+	}
+
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
+	@DeleteMapping("/{formaPagamentoId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
+		cadastroRestaurante.desassociarFormaPagamento(restauranteId, formaPagamentoId);
+	}
+
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
+	@PutMapping("/{formaPagamentoId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
+		cadastroRestaurante.associarFormaPagamento(restauranteId, formaPagamentoId);
+	}
 
 }

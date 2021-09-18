@@ -25,6 +25,7 @@ import com.razzolim.food.api.v1.FoodLinks;
 import com.razzolim.food.api.v1.assembler.UsuarioModelAssembler;
 import com.razzolim.food.api.v1.model.UsuarioModel;
 import com.razzolim.food.api.v1.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
+import com.razzolim.food.core.security.CheckSecurity;
 import com.razzolim.food.domain.model.Restaurante;
 import com.razzolim.food.domain.service.CadastroRestauranteService;
 
@@ -47,6 +48,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     @Autowired
     private FoodLinks foodLinks;
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId) {
@@ -57,12 +59,14 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
                 .add(foodLinks.linkToResponsaveisRestaurante(restauranteId));
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@DeleteMapping("/{usuarioId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
 		cadastroRestaurante.desassociarResponsavel(restauranteId, usuarioId);
 	}
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@PutMapping("/{usuarioId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void associar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
