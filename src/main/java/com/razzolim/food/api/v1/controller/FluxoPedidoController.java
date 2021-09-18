@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.razzolim.food.api.v1.openapi.controller.FluxoPedidoControllerOpenApi;
+import com.razzolim.food.core.security.CheckSecurity;
 import com.razzolim.food.domain.service.FluxoPedidoService;
 
 /**
@@ -34,18 +35,21 @@ public class FluxoPedidoController implements FluxoPedidoControllerOpenApi {
     @Autowired
     private FluxoPedidoService fluxoPedido;
     
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @PutMapping("/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void confirmar(@PathVariable String codigoPedido) {
 	fluxoPedido.confirmar(codigoPedido);
     }
     
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @PutMapping("/cancelamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelar(@PathVariable String codigoPedido) {
         fluxoPedido.cancelar(codigoPedido);
     }
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @PutMapping("/entrega")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void entregar(@PathVariable String codigoPedido) {
