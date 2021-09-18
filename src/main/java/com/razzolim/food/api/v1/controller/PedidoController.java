@@ -38,6 +38,7 @@ import com.razzolim.food.api.v1.model.input.PedidoInput;
 import com.razzolim.food.api.v1.openapi.controller.PedidoControllerOpenApi;
 import com.razzolim.food.core.data.PageWrapper;
 import com.razzolim.food.core.data.PageableTranslator;
+import com.razzolim.food.core.security.CheckSecurity;
 import com.razzolim.food.core.security.FoodSecurity;
 import com.razzolim.food.domain.exception.EntidadeNaoEncontradaException;
 import com.razzolim.food.domain.exception.NegocioException;
@@ -91,6 +92,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 		return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
 	}
 
+	@CheckSecurity.Pedidos.PodeBuscar
 	@GetMapping("/{codigoPedido}")
 	public PedidoModel buscar(@PathVariable String codigoPedido) {
 		Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
