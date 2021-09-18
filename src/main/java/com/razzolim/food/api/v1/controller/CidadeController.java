@@ -29,6 +29,7 @@ import com.razzolim.food.api.v1.assembler.CidadeModelAssembler;
 import com.razzolim.food.api.v1.model.CidadeModel;
 import com.razzolim.food.api.v1.model.input.CidadeInput;
 import com.razzolim.food.api.v1.openapi.controller.CidadeControllerOpenApi;
+import com.razzolim.food.core.security.CheckSecurity;
 import com.razzolim.food.domain.exception.EstadoNaoEncontradoException;
 import com.razzolim.food.domain.exception.NegocioException;
 import com.razzolim.food.domain.model.Cidade;
@@ -51,19 +52,22 @@ public class CidadeController implements CidadeControllerOpenApi {
     @Autowired
     private CidadeInputDisassembler cidadeInputDisassembler; 
 
-    @Deprecated
+    @CheckSecurity.Cidades.PodeConsultar
+    @Deprecated // documentacao
     @GetMapping
     public CollectionModel<CidadeModel> listar() {
         List<Cidade> todasCidades = cidadeRepository.findAll();
         return cidadeModelAssembler.toCollectionModel(todasCidades);
     }
 
+    @CheckSecurity.Cidades.PodeConsultar
     @GetMapping("/{cidadeId}")
     public CidadeModel buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
         return cidadeModelAssembler.toModel(cidade);
     }
 
+    @CheckSecurity.Cidades.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
@@ -82,7 +86,7 @@ public class CidadeController implements CidadeControllerOpenApi {
         }
     }
 
-
+    @CheckSecurity.Cidades.PodeEditar
     @PutMapping("/{cidadeId}")
     public CidadeModel atualizar(@PathVariable Long cidadeId,
             @RequestBody @Valid CidadeInput cidadeInput) {
@@ -100,25 +104,25 @@ public class CidadeController implements CidadeControllerOpenApi {
         }
     }
 
-
+    @CheckSecurity.Cidades.PodeEditar
     @DeleteMapping("/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cidadeId) {
 	cadastroCidade.excluir(cidadeId);
     }
     
+    @CheckSecurity.Cidades.PodeConsultar
     @GetMapping("/pageable")
     public Page<Cidade> listPageable(@RequestParam(defaultValue = "0") Integer pageNo, 
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy) {
 	
-	try {
-	    Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-	    return cadastroCidade.listPageable(pageable);
-	} catch (Exception error) {
-	    throw new NegocioException(error.getMessage(), error);
-	}
-	
+		try {
+		    Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		    return cadastroCidade.listPageable(pageable);
+		} catch (Exception error) {
+		    throw new NegocioException(error.getMessage(), error);
+		}	
     }
 
 }
