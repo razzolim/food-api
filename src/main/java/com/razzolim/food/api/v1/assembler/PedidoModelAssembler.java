@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.razzolim.food.api.v1.FoodLinks;
 import com.razzolim.food.api.v1.controller.PedidoController;
 import com.razzolim.food.api.v1.model.PedidoModel;
+import com.razzolim.food.core.security.FoodSecurity;
 import com.razzolim.food.domain.model.Pedido;
 
 /**
@@ -34,6 +35,9 @@ public class PedidoModelAssembler
     
     @Autowired
     private FoodLinks foodLinks;
+    
+    @Autowired
+    private FoodSecurity foodSecurity;
 
     public PedidoModelAssembler() {
         super(PedidoController.class, PedidoModel.class);
@@ -45,6 +49,13 @@ public class PedidoModelAssembler
         modelMapper.map(pedido, pedidoModel);
         
         pedidoModel.add(foodLinks.linkToPedidos());
+        
+        if (foodSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
+//        	if (pedido.podeSerConfirmado()) {        		
+//        		TODO pedidoModel.add(foodLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
+//        	}
+//        	...
+        }
         
         pedidoModel.getRestaurante().add(
         		foodLinks.linkToRestaurante(pedido.getRestaurante().getId()));
