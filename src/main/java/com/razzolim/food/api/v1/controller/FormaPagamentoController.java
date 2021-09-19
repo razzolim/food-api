@@ -65,7 +65,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
     @Autowired
     private FormaPagamentoInputDisassembler formaPagamentoInputDisassembler;
     
-    @CheckSecurity.FormaPagamento.PodeConsultar
+    @CheckSecurity.FormasPagamento.PodeConsultar
     @GetMapping
     public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request) {
         
@@ -98,7 +98,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
                 .body(formasPagamentoModel);
     }
     
-    @CheckSecurity.FormaPagamento.PodeConsultar
+    @CheckSecurity.FormasPagamento.PodeConsultar
     @GetMapping("/{formaPagamentoId}")
     public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long formaPagamentoId, ServletWebRequest request) {
 
@@ -126,7 +126,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
                 .body(formaPagamentoModel);
     }
     
-    @CheckSecurity.FormaPagamento.PodeEditar
+    @CheckSecurity.FormasPagamento.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FormaPagamentoModel adicionar(@RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
@@ -137,7 +137,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
         return formaPagamentoModelAssembler.toModel(formaPagamento);
     }
     
-    @CheckSecurity.FormaPagamento.PodeEditar
+    @CheckSecurity.FormasPagamento.PodeEditar
     @PutMapping("/{formaPagamentoId}")
     public FormaPagamentoModel atualizar(@PathVariable Long formaPagamentoId,
             @RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
@@ -150,7 +150,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
         return formaPagamentoModelAssembler.toModel(formaPagamentoAtual);
     }
     
-    @CheckSecurity.FormaPagamento.PodeEditar
+    @CheckSecurity.FormasPagamento.PodeEditar
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long formaPagamentoId) {
