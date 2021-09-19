@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.razzolim.food.api.v1.model.ProdutoModel;
+import com.razzolim.food.core.security.FoodSecurity;
 import com.razzolim.food.domain.model.Produto;
 
 /**
@@ -28,14 +29,19 @@ import com.razzolim.food.domain.model.Produto;
 @Component
 public class ProdutoModelAssembler {
 
-    @Autowired
-    private ModelMapper modelMapper;
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	@Autowired
+	private FoodSecurity foodSecurity;
 
-    public ProdutoModel toModel(Produto produto) {
-	return modelMapper.map(produto, ProdutoModel.class);
-    }
+	public ProdutoModel toModel(Produto produto) {
+		// TODO incluir links HATEOAS...
+		
+		return modelMapper.map(produto, ProdutoModel.class);
+	}
 
-    public List<ProdutoModel> toCollectionModel(List<Produto> produtos) {
-	return produtos.stream().map(produto -> toModel(produto)).collect(Collectors.toList());
-    }
+	public List<ProdutoModel> toCollectionModel(List<Produto> produtos) {
+		return produtos.stream().map(produto -> toModel(produto)).collect(Collectors.toList());
+	}
 }

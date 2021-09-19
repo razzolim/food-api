@@ -26,6 +26,7 @@ import com.razzolim.food.api.v1.assembler.PermissaoModelAssembler;
 import com.razzolim.food.api.v1.model.PermissaoModel;
 import com.razzolim.food.api.v1.openapi.controller.GrupoPermissaoControllerOpenApi;
 import com.razzolim.food.core.security.CheckSecurity;
+import com.razzolim.food.core.security.FoodSecurity;
 import com.razzolim.food.domain.model.Grupo;
 import com.razzolim.food.domain.service.CadastroGrupoService;
 
@@ -44,6 +45,9 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
 
 	@Autowired
 	private PermissaoModelAssembler permissaoModelAssembler;
+    
+    @Autowired
+    private FoodSecurity foodSecurity;
 
 	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@GetMapping
@@ -52,6 +56,31 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
 
 		return permissaoModelAssembler.toCollectionModel(grupo.getPermissoes());
 	}
+
+// TODO refatorar para esse método após incluir links HATEOAS	
+//	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+//	@Override
+//	@GetMapping
+//	public CollectionModel<PermissaoModel> listar(@PathVariable Long grupoId) {
+//	    Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+//	    
+//	    CollectionModel<PermissaoModel> permissoesModel 
+//	        = permissaoModelAssembler.toCollectionModel(grupo.getPermissoes())
+//	            .removeLinks();
+//	    
+//	    permissoesModel.add(algaLinks.linkToGrupoPermissoes(grupoId));
+//	    
+//	    if (algaSecurity.podeEditarUsuariosGruposPermissoes()) {
+//	        permissoesModel.add(algaLinks.linkToGrupoPermissaoAssociacao(grupoId, "associar"));
+//	    
+//	        permissoesModel.getContent().forEach(permissaoModel -> {
+//	            permissaoModel.add(algaLinks.linkToGrupoPermissaoDesassociacao(
+//	                    grupoId, permissaoModel.getId(), "desassociar"));
+//	        });
+//	    }
+//	    
+//	    return permissoesModel;
+//	}
 
 	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@DeleteMapping("/{permissaoId}")
