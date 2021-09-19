@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.razzolim.food.api.v1.assembler.GrupoModelAssembler;
 import com.razzolim.food.api.v1.model.GrupoModel;
 import com.razzolim.food.api.v1.openapi.controller.UsuarioGrupoControllerOpenApi;
+import com.razzolim.food.core.security.CheckSecurity;
 import com.razzolim.food.domain.model.Usuario;
 import com.razzolim.food.domain.service.CadastroUsuarioService;
 
@@ -35,32 +36,34 @@ import com.razzolim.food.domain.service.CadastroUsuarioService;
  * 
  */
 @RestController
-@RequestMapping(path = "/v1/usuarios/{usuarioId}/grupos", 
-produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/usuarios/{usuarioId}/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 
-    @Autowired
-    private CadastroUsuarioService cadastroUsuario;
+	@Autowired
+	private CadastroUsuarioService cadastroUsuario;
 
-    @Autowired
-    private GrupoModelAssembler grupoModelAssembler;
+	@Autowired
+	private GrupoModelAssembler grupoModelAssembler;
 
-    @GetMapping
-    public List<GrupoModel> listar(@PathVariable Long usuarioId) {
-	Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+	@GetMapping
+	public List<GrupoModel> listar(@PathVariable Long usuarioId) {
+		Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
 
-	return grupoModelAssembler.toCollectionModel(usuario.getGrupos());
-    }
+		return grupoModelAssembler.toCollectionModel(usuario.getGrupos());
+	}
 
-    @DeleteMapping("/{grupoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
-	cadastroUsuario.desassociarGrupo(usuarioId, grupoId);
-    }
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
+	@DeleteMapping("/{grupoId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
+		cadastroUsuario.desassociarGrupo(usuarioId, grupoId);
+	}
 
-    @PutMapping("/{grupoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
-	cadastroUsuario.associarGrupo(usuarioId, grupoId);
-    }
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
+	@PutMapping("/{grupoId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
+		cadastroUsuario.associarGrupo(usuarioId, grupoId);
+	}
 }

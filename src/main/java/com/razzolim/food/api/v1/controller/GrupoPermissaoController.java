@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.razzolim.food.api.v1.assembler.PermissaoModelAssembler;
 import com.razzolim.food.api.v1.model.PermissaoModel;
 import com.razzolim.food.api.v1.openapi.controller.GrupoPermissaoControllerOpenApi;
+import com.razzolim.food.core.security.CheckSecurity;
 import com.razzolim.food.domain.model.Grupo;
 import com.razzolim.food.domain.service.CadastroGrupoService;
 
@@ -35,33 +36,35 @@ import com.razzolim.food.domain.service.CadastroGrupoService;
  * 
  */
 @RestController
-@RequestMapping(path = "/v1/grupos/{grupoId}/permissoes",
-produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/grupos/{grupoId}/permissoes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi {
 
-    @Autowired
-    private CadastroGrupoService cadastroGrupo;
+	@Autowired
+	private CadastroGrupoService cadastroGrupo;
 
-    @Autowired
-    private PermissaoModelAssembler permissaoModelAssembler;
+	@Autowired
+	private PermissaoModelAssembler permissaoModelAssembler;
 
-    @GetMapping
-    public List<PermissaoModel> listar(@PathVariable Long grupoId) {
-	Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+	@GetMapping
+	public List<PermissaoModel> listar(@PathVariable Long grupoId) {
+		Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
 
-	return permissaoModelAssembler.toCollectionModel(grupo.getPermissoes());
-    }
+		return permissaoModelAssembler.toCollectionModel(grupo.getPermissoes());
+	}
 
-    @DeleteMapping("/{permissaoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void desassociar(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
-	cadastroGrupo.desassociarPermissao(grupoId, permissaoId);
-    }
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
+	@DeleteMapping("/{permissaoId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void desassociar(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
+		cadastroGrupo.desassociarPermissao(grupoId, permissaoId);
+	}
 
-    @PutMapping("/{permissaoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void associar(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
-	cadastroGrupo.associarPermissao(grupoId, permissaoId);
-    }
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
+	@PutMapping("/{permissaoId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void associar(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
+		cadastroGrupo.associarPermissao(grupoId, permissaoId);
+	}
 
 }
