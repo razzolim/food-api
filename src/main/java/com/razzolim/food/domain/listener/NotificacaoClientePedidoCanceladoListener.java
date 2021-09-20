@@ -27,7 +27,7 @@ import com.razzolim.food.domain.service.EnvioEmailService.Mensagem;
 @Component
 public class NotificacaoClientePedidoCanceladoListener {
 
-    private static final String TEMPLATE_PEDIDO_CANCELADO_HTML = "pedido-cancelado.html";
+    private static final String TEMPLATE_PEDIDO_CANCELADO_HTML = "emails/pedido-cancelado.html";
     
     @Autowired
     private EnvioEmailService envioEmail;
