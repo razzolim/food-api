@@ -10,7 +10,6 @@
 package com.razzolim.food.domain.listener;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -29,7 +28,7 @@ import com.razzolim.food.domain.service.EnvioEmailService.Mensagem;
 @Component
 public class NotificacaoClientePedidoConfirmadoListener {
     
-    private static final String TEMPLATE_PEDIDO_CONFIRMADO_HTML = "pedido-confirmado.html";
+    private static final String TEMPLATE_PEDIDO_CONFIRMADO_HTML = "emails/pedido-confirmado.html";
     
     @Autowired
     private EnvioEmailService envioEmailService;
